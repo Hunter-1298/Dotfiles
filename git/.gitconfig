@@ -1,0 +1,24 @@
+[user]
+
+    name = hhayden
+    email = hhayden@ltsnet.net
+
+[color]
+    ui = auto
+    diff = auto
+    status = auto
+    branch = auto
+
+[alias]
+    wdiff = diff --word-diff
+
+lol = log --graph --decorate --oneline --format='\
+%C(bold blue)%h%C(reset)\
+%C(bold yellow)%d%C(reset)\
+%C(bold white)%s%C(reset)\
+<%C(white)%cn%C(reset)>\
+%C(bold green)(%cr)%C(reset)'
+
+lola = !git lol --all
+[safe]
+	directory = /Users/hunterhayden/.config/nvim
