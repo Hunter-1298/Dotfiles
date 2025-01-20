@@ -1,0 +1,52 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+export LS_COLORS="di=1;96:fi=0;97:ln=1;95:pi=1;93:so=1;92:bd=1;94:cd=1;94:or=1;91:mi=1;91:ex=1;92:*.tar=1;31:*.zip=1;31:*.jpg=1;35:*.png=1;35:*.mp4=1;36:*.mkv=1;36:*.pdf=1;33:*.doc=1;34:*.html=1;91:*.css=1;96:*.js=1;93:*.py=1;92:*.sh=1;92"
+
+# Set up XDG Base Directory for configurations
+export XDG_CONFIG_HOME="$HOME/.config/"
+
+# Aliases
+alias vim=/usr/local/bin/nvim
+alias ls='eza -G --icons --color=always'
+alias la='eza -G -l -a --icons --color=always '
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+# Custom cd function to automatically run ls after changing directory
+cd() {
+    builtin cd "$@" && ls
+}
+# History settings
+HISTSIZE=1000
+HISTFILESIZE=2000
+
+# Theme for Oh My Zsh
+
+# If using Powerlevel10k, make sure it’s installed.
+if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k" ]; then
+    echo "Powerlevel10k theme not found. Install it using:"
+    echo "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
+fi
+
+# Load Zsh plugins and settings (if using Oh My Zsh)
+if [ -f ~/.oh-my-zsh/oh-my-zsh.sh ]; then
+    source ~/.oh-my-zsh/oh-my-zsh.sh
+fi
+
+# Additional plugin suggestions
+# Uncomment if installed via Oh My Zsh
+# plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+
+# Source Powerlevel10k configuration if available
+if [ -f ~/.p10k.zsh ]; then
+    source ~/.p10k.zsh
+fi
+
+source /usr/local/share/powerlevel10k/powerlevel10k.zsh-theme
+ZSH_THEME="powerlevel10k/powerlevel10k"
