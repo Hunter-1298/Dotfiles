@@ -12,9 +12,9 @@ export XDG_CONFIG_HOME="$HOME/.config/"
 
 # Aliases
 alias vim=/usr/local/bin/nvim
-alias ls='eza -G --icons --color=always'
-alias lart='eza -Glas=time --icons --color=always'
-alias la='eza -G -l -a --icons --color=always'
+alias ls='eza --icons --color=always --show-symlinks'
+alias lart='eza -als=time --icons --color=always --show-symlinks'
+alias la='eza -al --icons --color=always --show-symlinks'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
