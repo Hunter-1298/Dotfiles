@@ -13,9 +13,6 @@ export ZSH="$HOME/.oh-my-zsh"
 export XDG_CONFIG_HOME="$HOME/.config/"
 # Aliases
 # Custom cd function to automatically run ls after changing directory
-cd() {
-    builtin cd "$@" && ls
-}
 # History settings
 HISTSIZE=1000
 HISTFILESIZE=2000
@@ -138,3 +135,6 @@ alias la='eza -al --icons --color=always --show-symlinks'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
+cd() {
+    builtin cd "$@" && ls
+}
