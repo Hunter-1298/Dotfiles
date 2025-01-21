@@ -203,6 +203,13 @@ return {
             },
           },
         },
+        ts_ls = {},
+        tailwindcss = {},
+        html = {},
+        cssls = {},
+        cssmodules_ls = {},
+        eslint_d = {},
+        prettier = {},
         -- Not setting up rust analyzer, letting rustaceanvim set it up for us
         -- install with local toolchain using <rustup component add rust-analyzer>
         -- rust_analyzer = {},
