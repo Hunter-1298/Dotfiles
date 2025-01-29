@@ -52,6 +52,16 @@ return {
             luasnip.lsp_expand(args.body)
           end,
         },
+        window = {
+          completion = cmp.config.window.bordered {
+            border = 'rounded', -- Options: "rounded", "double", "single", "shadow"
+            winhighlight = 'Normal:CmpPmenu,FloatBorder:CmpBorder,CursorLine:Visual,Search:None',
+          },
+          documentation = cmp.config.window.bordered {
+            border = 'rounded',
+            winhighlight = 'Normal:CmpPmenu,FloatBorder:CmpBorder',
+          },
+        },
         completion = { completeopt = 'menu,menuone,noinsert' },
 
         -- For an understanding of why these mappings were
