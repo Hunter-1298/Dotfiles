@@ -55,7 +55,7 @@ return {
         window = {
           completion = cmp.config.window.bordered {
             border = 'rounded', -- Options: "rounded", "double", "single", "shadow"
-            winhighlight = 'Normal:CmpPmenu,FloatBorder:CmpBorder,CursorLine:Visual,Search:None',
+            winhighlight = 'Normal:CmpPmenu,FloatBorder:CmpBorder,CursorLine:CmpSel,Search:None',
           },
           documentation = cmp.config.window.bordered {
             border = 'rounded',

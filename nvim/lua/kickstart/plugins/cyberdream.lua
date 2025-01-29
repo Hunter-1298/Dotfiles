@@ -25,7 +25,8 @@ return {
       vim.cmd.colorscheme 'cyberdream'
 
       -- You can configure highlights by doing something like:
-      vim.cmd.hi 'Comment gui=none'
+      -- vim.cmd.hi 'Comment gui=none'
+      vim.api.nvim_set_hl(0, 'CmpSel', { bg = '#4C566A', fg = '#D8DEE9' })
     end,
   },
 }

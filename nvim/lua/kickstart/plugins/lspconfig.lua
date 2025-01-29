@@ -194,15 +194,7 @@ return {
       local util = require 'lspconfig.util'
       local servers = {
         -- clangd = {},
-        basedpyright = {
-          settings = {
-            basedpyright = {
-              analysis = {
-                typeCheckingMode = 'basic',
-              },
-            },
-          },
-        },
+        pyright = {},
         ts_ls = {},
         cssls = {},
         cssmodules_ls = {},
