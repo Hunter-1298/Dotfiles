@@ -195,13 +195,14 @@ return {
       local servers = {
         -- clangd = {},
         pyright = {},
+        emmet_language_server = {},
         ts_ls = {},
         cssls = {},
         cssmodules_ls = {},
         tailwindcss = {},
         html = {},
         eslint_d = {},
-        prettier = {},
+        prettierd = {},
         -- Not setting up rust analyzer, letting rustaceanvim set it up for us
         -- install with local toolchain using <rustup component add rust-analyzer>
         -- rust_analyzer = {},
