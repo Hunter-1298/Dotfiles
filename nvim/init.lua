@@ -21,3 +21,9 @@ require 'lazy-bootstrap'
 require 'lazy-plugins'
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+vim.cmd [[
+  augroup SetCmpSelHighlight
+    autocmd!
+    autocmd VimEnter * lua vim.api.nvim_set_hl(0, 'CmpSel', { bg = '#4CAF50', fg = '#2E3440', bold = true })
+  augroup END
+]]
