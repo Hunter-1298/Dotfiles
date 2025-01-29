@@ -204,10 +204,10 @@ return {
           },
         },
         ts_ls = {},
-        tailwindcss = {},
-        html = {},
         cssls = {},
         cssmodules_ls = {},
+        tailwindcss = {},
+        html = {},
         eslint_d = {},
         prettier = {},
         -- Not setting up rust analyzer, letting rustaceanvim set it up for us
