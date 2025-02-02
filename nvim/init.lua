@@ -8,6 +8,7 @@ vim.g.python3_host_prog = '/usr/bin/python'
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 vim.opt.fileformats = { 'unix', 'dos' }
+vim.api.nvim_set_keymap('n', '<leader>bd', ':bd<CR>', { noremap = true, silent = true, desc = 'Delete Buffer' })
 -- [[ Setting options ]]
 require 'options'
 
