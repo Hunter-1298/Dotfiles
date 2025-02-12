@@ -1,0 +1,561 @@
+{   
+"keyboard.dispatch": "keyCode",
+"vscode-neovim.useCtrlKeys": false,
+"whichkey.delay": 0,
+"whichkey.sortOrder": "alphabetically",
+"whichkey.bindings": [
+    {
+    "key": ";",
+    "name": "commands",
+    "type": "command",
+    "command": "workbench.action.showCommands"
+    },   
+    {
+    "key": "k",
+    "name": "Close active editor",
+    "type": "command",
+    "command": "workbench.action.closeActiveEditor"
+    },
+    {
+    "key": "q",
+    "name": "Kill Terminal",
+    "type": "command",
+    "command": "workbench.action.terminal.kill"
+    },
+    {
+    "key": "t",
+    "name": "Toggle Terminal",
+    "type": "command",
+    "command": "workbench.action.togglePanel"
+    },
+    {
+    "key": "b",
+    "name": "Buffers/Editors...",
+    "type": "bindings",
+    "bindings": [
+        {
+        "key": "b",
+        "name": "Show all buffers/editors",
+        "type": "command",
+        "command": "workbench.action.showAllEditors"
+        },
+        {
+        "key": "m",
+        "name": "Close other editors",
+        "type": "command",
+        "command": "workbench.action.closeOtherEditors"
+        },
+        {
+        "key": "u",
+        "name": "Reopen closed editor",
+        "type": "command",
+        "command": "workbench.action.reopenClosedEditor"
+        },
+        {
+        "key": "y",
+        "name": "Copy buffer to clipboard",
+        "type": "commands",
+        "commands": [
+            "editor.action.selectAll",
+            "editor.action.clipboardCopyAction",
+            "cancelSelection"
+        ]
+        }
+    ]
+    },
+    {
+    "key": "e",
+    "name": "Toggle Explorer",
+    "type": "command",
+    "command": "workbench.action.toggleSidebarVisibility"
+    },
+    {
+    "key": "f",
+    "name": "Find & Replace...",
+    "type": "bindings",
+    "bindings": [
+        {
+        "key": "f",
+        "name": "File",
+        "type": "command",
+        "command": "editor.action.startFindReplaceAction"
+        },
+        {
+        "key": "p",
+        "name": "Project",
+        "type": "command",
+        "command": "workbench.action.replaceInFiles"
+        }
+    ]
+    },
+    {
+    "key": "h",
+    "name": "Split Horizontal",
+    "type": "command",
+    "command": "workbench.action.splitEditorDown"
+    },
+    {
+    "key": "s",
+    "name": "Search...",
+    "type": "bindings",
+    "bindings": [
+        {
+        "key": "f",
+        "name": "files",
+        "type": "command",
+        "command": "workbench.action.quickOpen"
+        },
+        {
+        "key": "t",
+        "name": "text",
+        "type": "command",
+        "command": "workbench.action.findInFiles"
+        }
+    ]
+    },
+    {
+    "key": "v",
+    "name": "Split Vertical",
+    "type": "command",
+    "command": "workbench.action.splitEditor"
+    },
+    {
+    "key": "z",
+    "name": "Toggle zen mode",
+    "type": "command",
+    "command": "workbench.action.toggleZenMode"
+    }
+],
+"editor.suggestSelection": "first",
+"files.exclude": {
+    "**/.classpath": true,
+    "**/.project": true,
+    "**/.settings": true,
+    "**/.factorypath": true,
+    "**/node_modules": true
+},
+    "vscode-neovim.neovimExecutablePaths.darwin" : "/usr/local/bin/nvim",
+    "vscode-neovim.neovimInitVimPaths.darwin" : "$HOME/.config/nvim/init.lua",
+    "editor.fontLigatures": true,
+    "terminal.integrated.fontFamily": "JetbrainsMono Nerd Font Mono",
+    "editor.fontFamily": "JetbrainsMono Nerd Font Mono",
+    "git.autofetch": true,
+    "editor.tabSize": 2,
+    "explorer.confirmDelete": false,
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "atlascode.jira.jqlList": [],
+    "explorer.confirmDragAndDrop": false,
+    "atlascode.bitbucket.enabled": false,
+    "editor.inlineSuggest.enabled": true,
+    "atlascode.jira.enabled": true,
+    "github.copilot.enable": {
+        "*": true,
+        "plaintext": true,
+        "markdown": true,
+        "scminput": false,
+        "yaml": true,
+        "typescript": true
+    },
+    "terminal.integrated.gpuAcceleration": "on",
+    "zenMode.hideLineNumbers": false,
+    "yaml.customTags": [
+        "!And",
+        "!And sequence",
+        "!If",
+        "!If sequence",
+        "!Not",
+        "!Not sequence",
+        "!Equals",
+        "!Equals sequence",
+        "!Or",
+        "!Or sequence",
+        "!FindInMap",
+        "!FindInMap sequence",
+        "!Base64",
+        "!Join",
+        "!Join sequence",
+        "!Cidr",
+        "!Ref",
+        "!Sub",
+        "!Sub sequence",
+        "!GetAtt",
+        "!GetAZs",
+        "!ImportValue",
+        "!ImportValue sequence",
+        "!Select",
+        "!Select sequence",
+        "!Split",
+        "!Split sequence"
+    ],
+    "json.schemas": [],
+    "editor.codeActionsOnSave": {
+        "source.addMissingImports.ts": "always",
+        "source.fixAll": "explicit",
+    },
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": "active",
+    "[typescript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "editor.accessibilitySupport": "off",
+    "goToTest.specFilePatterns": [
+        "{f}.spec{e}",
+        "{f}.test{e}",
+        "{f}-spec{e}",
+        "{f}-test{e}",
+        "{f}_spec{e}",
+        "{f}_test{e}",
+        "{f}Tests{e}",
+        "{f}tests{e}",
+        "{f}Tests",
+        "{f}Test"
+    ],
+    "vim.normalModeKeyBindings": [
+        {
+            "before": ["s"],
+            "commands": ["flash.jump"]
+        },
+        {
+            "before": ["S"],
+            "commands": ["flash.treesitter"]
+        }
+    ],
+    "vim.insertModeKeyBindings": [
+        {
+            "before": [
+                "j",
+                "k"
+            ],
+            "after": [
+                "<Esc>"
+            ]
+        }
+    ],
+    "runCurrentTest.run": "npm run test -r ${relativeTestPath} -- -t \"${testName}\"  --reporter default",
+    "runCurrentTest.runAndUpdateSnapshots": "npm run test ${relativeTestPath}  --reporter default",
+    "workbench.startupEditor": "terminal",
+    "editor.scrollbar.horizontal": "hidden",
+    "editor.scrollbar.vertical": "hidden",
+    "editor.overviewRulerBorder": false,
+    "gitlens.integrations.enabled": true,
+    "goToTest.testFolder": "test/unit/",
+    "goToTest.srcFolder": "source",
+    "goToTest.pathType": "absolute",
+    "git.terminalGitEditor": true,
+    "npm.keybindingsChangedWarningShown": true,
+    "vitest.include": [
+        "test/unit/**"
+    ],
+    "runInTerminal.clearBeforeRun": true,
+    "runInTerminal.commands": [
+        {
+            "key": "ctrl+e",
+            "command": "runInTerminal.run",
+            "args": {
+                "cmd": "npx vitest",
+                "match": "\\.ts$",
+                "name": "s"
+            }
+        }
+    ],
+    
+    "testing.autoRun.mode": "rerun",
+    "wallaby.codeLensFeature.runTest": true,
+    "errorLens.statusBarIconsEnabled": true,
+    "errorLens.statusBarMessageEnabled": true,
+    "errorLens.statusBarMessageTemplate": "$message",
+    "vim.commandLineModeKeyBindings": [
+        {
+            "before": [
+                ":"
+            ],
+            "commands": [
+                "extension.GoToAnything"
+            ],
+            "silent": false
+        }
+    ],
+    "vim.sneak": false,
+    "vim.flash.enable": true,
+    "vim.flash.labels": "dsqcxvertgbmlkjnoiu",
+    "vim.visualModeKeyBindings": [
+        {
+            "before": ["s"],
+            "commands": ["flash.jump"]
+        }
+    ],
+    "editor.stickyScroll.enabled": true,
+    "errorLens.excludePatterns": [
+        "[\"node_modules\", \"**/node_modules\"]",
+        "\"node_modules\"",
+        "node_modules",
+        " [\"**/*.{js}\"]",
+        "**/node_modules"
+    ],
+    "editor.codeLens": false,
+    "editor.lineNumbers": "relative",
+    "errorLens.enabledDiagnosticLevels": [
+        "warning",
+        "error"
+    ],
+    "errorLens.severityText": [
+        "ERROR",
+        "WARNING",
+        "HINT",
+        "ERROR"
+    ],
+    "errorLens.light": {},
+    "window.title": "",
+    "terminal.explorerKind": "integrated",
+    "debug.terminal.clearBeforeReusing": true,
+    "terminal.external.osxExec": "iTerm2.app",
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    "zenMode.fullScreen": false,
+    "errorLens.messageTemplate": "$message - $source",
+    "javascript.suggest.names": false,
+    "eslint.lintTask.options": "npm run lint",
+    "zenMode.centerLayout": false,
+    "workbench.editor.limit.enabled": true,
+    "workbench.editor.limit.value": 3,
+    "workbench.editor.pinnedTabSizing": "compact",
+    "workbench.editor.tabSizing": "shrink",
+    "workbench.editor.highlightModifiedTabs": true,
+    "vim.easymotion": true,
+    "vim.leader": "space",
+    "custom-ui-style.font.family": "Jetbrains Mono",
+    "custom-ui-style.electron": {
+        "transparent": true,
+        "opacity": 0.50,
+        "vibrancy": "ultra-dark"
+    },
+    "custom-ui-style.webview.stylesheet": {
+        ".inline-tabs-placeholder": "display: none !important;",
+        ".monaco-hover": "border: 1px solid #007ACC !important;",
+        ".tree": "border: 1px solid #007ACC !important;",
+        ".quick-input-widget": {
+            "width": "900px !important",
+            "left": "41% !important",
+            "top": "250px !important",
+            "padding": "15px !important",
+            "background-color": "rgb(30, 30, 30) !important",
+            "border-radius": "10px !important",
+            "border": "1px solid #007ACC !important"
+        },
+        ".quick-input-widget .quick-input-header": "padding:0px!important;margin-bottom:10px;",
+        ".quick-input-widget .monaco-inputbox": {
+            "padding": "10px !important",
+            "border-radius": "5px!important"
+        },
+        ".quick-input-widget .monaco-list-rows": "top: 0 !important;max-height:670px;min-height:300px;",
+        ".quick-input-widget .monaco-list-row": "position:static!important;border-bottom: 1px solid #333942;padding:5px!important;height:auto!important;",
+        ".quick-input-widget .quick-input-list-entry": "position:relative;padding:0 5px 0px 15px;",
+        ".quick-input-widget .quick-input-list-entry .codicon[class*=codicon-]": "font-size:12px;",
+        ".quick-input-widget .quick-input-list .quick-input-list-entry.quick-input-list-separator-border": "border-top-width:0px!important;",
+        ".monaco-editor .cursor": "background: linear-gradient(to bottom, #00FF00, #00FF00) !important;  color: #161616 !important",
+        ".title-actions": "display: none !important",
+        ".quick-input-widget.show-file-icons, .editor-widget.find-widget": "box-shadow: none !important",
+        ".filematch .monaco-icon-label:before, .custom-list-row.results .monaco-list-row .monaco-icon-label:before": "background-position: 0 bottom !important",
+        ".filematch .monaco-count-badge": "padding: 5px 6px 0 6px !important",
+        ".sidebar .title-label": "padding: 0 !important",
+        ".monaco-workbench .monaco-list:not(.element-focused):focus:before": "outline: none !important",
+        ".sidebar": "border: none !important",
+        ".quick-input-list-row div": "display: flex !important; align-items: center !important",
+        ".panel .composite.title": "visibility: hidden !important",
+        ".title.show-file-icons .label-container .monaco-icon-label.file-icon": "padding-bottom: 6px !important",
+        ".sidebar .title-label h2": "line-height: 2.8 !important",
+        ".monaco-editor .scroll-decoration": "display: none !important",
+        ".monaco-scrollable-element > .shadow.top": "display: none !important",
+        ".editor-group-watermark": {
+            "font-size": "15px !important"
+        }
+    },
+    "custom-ui-style.external.imports": [
+        "file://${userHome}/Library/Application Support/Code/User/emptyPage.js",
+    ],
+    "window.titleBarStyle": "native",
+    "window.backgroundColor": "#1e1e1e",
+    "window.autoDetectColorScheme": false,
+    "workbench.colorCustomizations": {
+        "editor.background": "#1e1e1e",
+        "sideBar.background": "#1e1e1e",
+        "terminal.background": "#1e1e1e",
+        "activityBar.background": "#1e1e1e",
+        "titleBar.activeBackground": "#1e1e1e",
+        "titleBar.inactiveBackground": "#1e1e1e"
+    },
+    "binocular.command.commands": [
+        {
+            "shellCommand": "glab pipeline ci view",
+            "commandIdentifier": "pipeline",
+        },
+        {
+            "shellCommand": "git-jira",
+            "commandIdentifier": "git-jira",
+        },
+        {
+            "shellCommand": "telescope",
+            "commandIdentifier": "Telescope",
+            "key": "shift+cmd+f",
+        },
+        {
+            "shellCommand": "lazygit",
+            "commandIdentifier": "Lazygit"
+        },
+        {
+            "shellCommand": "git checkout $(git fuzzy log)",
+            "commandIdentifier": "Git fuzzy log"
+        },
+        {
+            "shellCommand": "git checkout $(git fuzzy log ${file})",
+            "commandIdentifier": "Git fuzzy log current file"
+        }
+    ],
+    "quickgrep.preview": true,
+    "workbench.editor.enablePreviewFromCodeNavigation": true,
+    "workbench.editor.enablePreviewFromQuickOpen": true,
+    "find-it-faster.general.openFileInPreviewEditor": true,
+    "terminal.integrated.tabs.enabled": false,
+    "workbench.editor.tabActionCloseVisibility": false,
+    "workbench.editor.empty.hint": "hidden",
+    "animations.Install-Method": "Custom UI Style",
+    "editor.fontSize": 13,
+    "vitest.rootConfig": "./test/vitest.config.ts, vite.config.ts",
+    "editor.codeLensFontFamily": "Jetbrains Mono",
+    "editor.inlayHints.fontFamily": "Jetbrains Mono",
+    "editor.inlineSuggest.fontFamily": "Jetbrains Mono",
+    "debug.console.fontFamily": "Jetbrains Mono",
+    "scm.inputFontFamily": "Jetbrains Mono",
+    "notebook.output.fontFamily": "Jetbrains Mono",
+    "chat.editor.fontFamily": "Jetbrains Mono",
+    "errorLens.fontFamily": "Jetbrains Mono",
+    "gitlens.blame.fontFamily": "Jetbrains Mono",
+    "window.commandCenter": false,
+    "workbench.panel.opensMaximized": "always",
+    "gitlens.statusBar.alignment": "left",
+    "gitlens.graph.layout": "editor",
+    "gitlens.cloudPatches.experimental.layout": "editor",
+    "vitest.nodeEnv": {},
+    "errorLens.codeLensEnabled": true,
+    "window.customTitleBarVisibility": "never",
+    "github.copilot.editor.enableAutoCompletions": true,
+    "animations.Command-Palette": "Slide",
+    "animations.Tabs": "None",
+    "animations.Scrolling": "None",
+    "animations.Enabled": true,
+    "explorer.openEditors.visible": 1,
+    "gitlens.graph.dateStyle": "absolute",
+    "find-it-faster.general.useTerminalInEditor": true,
+    "find-it-faster.advanced.disableStartupChecks": true,
+    "find-it-faster.findWithinFiles.previewWindowConfig": "right:55%:wrap",
+    "find-it-faster.findWithinFiles.previewCommand": "bat --style=numbers --color=always --line-range=:100 {1}  --highlight-line {2}",
+    "find-it-faster.general.searchCurrentWorkingDirectory": "never",
+    "find-it-faster.general.clearTerminalAfterUse": false,
+    "find-it-faster.findWithinFiles.fuzzRipgrepQuery": true,
+    "find-it-faster.general.killTerminalAfterUse": true,
+    "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+    "window.density.editorTabHeight": "compact",
+    "eslint.lintTask.enable": true,
+    "eslint.enable": true,
+    "testExplorer.useNativeTesting": true,
+    "testing.showAllMessages": true,
+    "testExplorer.addToEditorContextMenu": true,
+    "terminal.integrated.suggest.builtinCompletions": {
+        "pwshCode": true,
+        "pwshGit": true
+    },
+    "terminal.integrated.suggest.enabled": true,
+    "workbench.externalBrowser": "Arc",
+    "terminal.integrated.confirmOnKill": "never",
+    "terminal.integrated.enableImages": true,
+    "extensions.experimental.affinity": {
+        "asvetliakov.vscode-neovim": 1
+    },
+    "projectManager.supportSymlinksOnBaseFolders": true,
+    "svelte.enable-ts-plugin": true,
+    "vim.camelCaseMotion.enable": true,
+    "vim.highlightedyank.enable": true,
+    "vim.smartRelativeLine": true,
+    "vim.enableNeovim": true,
+    "vim.statusBarColors.commandlineinprogress": "#00ff00",
+    "vim.useSystemClipboard": true,
+    "vim.easymotionDimColor": "",
+    "vim.easymotionIncSearchForegroundColor": "",
+    "vim.easymotionMarkerBackgroundColor": "",
+    "vim.sneakUseIgnorecaseAndSmartcase": true,
+    "vim.easymotionMarkerForegroundColorTwoCharSecond": "",
+    "vim.easymotionMarkerForegroundColorOneChar": "",
+    "vim.easymotionMarkerForegroundColorTwoCharFirst": "",
+    "vim.lash.enable": true,
+    "terminal.integrated.defaultLocation": "editor",
+    "vim.easymotionKeys": "hklyuiopnm,azeerqsdfwx;",
+    "vim.highlightedyank.color": "limegreen",
+    "workbench.editor.autoLockGroups": {
+        "terminalEditor": false
+    },
+    "lazygit-vscode.autoHidePanel": true,
+    "lazygit-vscode.autoHideSideBar": true,
+    "lazygit-vscode.autoMaximizeWindow": true,
+    "projectManager.sortList": "Recent",
+    "editor.mouseWheelZoom": true,
+    "vim.searchHighlightTextColor": "limegreen",
+    "vim.searchHighlightColor": "blue",
+    "editor.peekWidgetDefaultFocus": "editor",
+    "window.newWindowDimensions": "maximized",
+    "atlascode.jira.lastCreateSiteAndProject": {
+        "siteId": "bdd4bedd-1521-40aa-84a6-d348241e248b",
+        "projectKey": "ACQ"
+    },
+    "diffEditor.ignoreTrimWhitespace": true,
+    "testing.automaticallyOpenPeekView": "never",
+    "gitlens.advanced.messages": {
+        "suppressIntegrationDisconnectedTooManyFailedRequestsWarning": true
+    },
+    "debug.onTaskErrors": "debugAnyway",
+    "diffEditor.experimental.useTrueInlineView": true,
+    "find-it-faster.general.shellPathForTerminal": "/bin/bash",
+    "terminal.integrated.env.osx": {
+        "FIG_NEW_SESSION": "1"
+    },
+    "extensions.autoCheckUpdates": false,
+    "update.mode": "none",
+    "git-graph.repository.commits.fetchAvatars": true,
+    "testing.automaticallyOpenTestResults": "neverOpen",
+    "github.copilot.nextEditSuggestions.enabled": true,
+    "custom-ui-style.background.opacity": 0.4,
+    "custom-ui-style.font.sansSerif": "Jetbrains Mono Nerd Font",
+    "workbench.activityBar.location": "hidden",
+    "window.vibrancy": "under-window",
+    "window.nativeTabs": true,
+    "notebook.lineNumbers": "on",
+    "vim.operatorPendingModeKeyBindings": [
+        {
+            "before": ["s"],
+            "commands": ["flash.jump"]
+        },
+        {
+            "before": ["r"],
+            "commands": ["flash.remote"]
+        }
+    ],
+    "vim.normalModeKeyBindingsNonRecursive": [
+        {
+            "before": ["s"],
+            "commands": ["vscode-neovim.send", "s"]
+        },
+        {
+            "before": ["j"],
+            "after": ["g", "j"]
+        },
+        {
+            "before": ["k"],
+            "after": ["g", "k"]
+        }
+    ],
+    "vim.useCtrlKeys": true,
+    "vim.handleKeys": {
+        "s": false,
+        "<C-d>": true,
+        "<C-u>": true
+    },
+}
+
