@@ -1,3 +1,4 @@
+
 {
     "window.commandCenter": 1,
     "extensions.experimental.affinity": {
@@ -5,32 +6,27 @@
     },
     "editor.lineNumbers": "relative",
     "terminal.integrated.allowChords": false,
-    "vim.easymotion": true,
-    "vim.leader": "<space>",
-    "vim.incsearch": true,
-    "vim.useSystemClipboard": true,
-    "vim.useCtrlKeys": true,
-    "vim.hlsearch": true,
-    "vim.insertModeKeyBindings": [
-        {
-        "before": ["j", "j"],
-        "after": ["<Esc>"]
-        }
-    ],
-    "vim.normalModeKeyBindingsNonRecursive": [
-        {
-        "before": ["<leader>", "t"],
-        "after": "workbench.action.terminal.toggleTerminal"
-        },
-        {
-        "before": ["<C-n>"],
-        "commands": [":nohl"]
-        },
-        {
-        "before": ["K"],
-        "commands": ["lineBreakInsert"],
-        "silent": true
-        }
-    ]
-
+    "terminal.integrated.fontFamily": "JetBrainsMono Nerd Font",
+    "editor.fontFamily": "JetBrainsMono Nerd Font, Menlo, Monaco, 'Courier New', monospace",
+    "editor.fontLigatures": true,
+    // Enable smooth scrolling animation
+  "editor.smoothScrolling": true,
+  
+  // Vim Configuration
+  // Enable easymotion plugin for quick navigation
+  "vim.easymotion": true,
+  // Enable incremental search highlighting
+  "vim.incsearch": true,
+  // Use system clipboard for vim operations
+  "vim.useSystemClipboard": true,
+  // Enable Ctrl key combinations
+  "vim.useCtrlKeys": true,
+  // Enable search highlight
+  "vim.hlsearch": true,
+  // Set space as the leader key
+  "vim.leader": " ",
+  // Enable vim-sneak plugin for improved motion
+  "vim.sneak": true,
+  // Use relative line numbers in normal mode
+  "vim.smartRelativeLine": true,
 }
