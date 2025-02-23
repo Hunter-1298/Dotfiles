@@ -5,4 +5,32 @@
     },
     "editor.lineNumbers": "relative",
     "terminal.integrated.allowChords": false,
+    "vim.easymotion": true,
+    "vim.leader": "<space>",
+    "vim.incsearch": true,
+    "vim.useSystemClipboard": true,
+    "vim.useCtrlKeys": true,
+    "vim.hlsearch": true,
+    "vim.insertModeKeyBindings": [
+        {
+        "before": ["j", "j"],
+        "after": ["<Esc>"]
+        }
+    ],
+    "vim.normalModeKeyBindingsNonRecursive": [
+        {
+        "before": ["<leader>", "t"],
+        "after": "workbench.action.terminal.toggleTerminal"
+        },
+        {
+        "before": ["<C-n>"],
+        "commands": [":nohl"]
+        },
+        {
+        "before": ["K"],
+        "commands": ["lineBreakInsert"],
+        "silent": true
+        }
+    ]
+
 }
