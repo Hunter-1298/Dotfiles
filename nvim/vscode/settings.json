@@ -7,12 +7,16 @@
     },
     "editor.lineNumbers": "relative",
     "terminal.integrated.allowChords": false,
-    "terminal.integrated.fontFamily": "Hack Nerd Font",
-    "editor.fontFamily": "Hack Nerd Font, Menlo, Monaco, 'Courier New', monospace",
+    "terminal.integrated.fontFamily": "Fira Code iCursive s12, Menlo, Monaco, 'Courier New', monospace",
+    "editor.fontFamily": "Fira Code iCursive s12, Menlo, Monaco, 'Courier New', monospace",
     "editor.fontLigatures": true,
+    "prettier.enable": true,
+    "editor.formatOnSave": true,
+    "[python]": {
+      "editor.formatOnSave": true
+  },
     // Enable smooth scrolling animation
   "editor.smoothScrolling": true,
-  
   // Vim Configuration
   // Enable easymotion plugin for quick navigation
   "vim.easymotion": true,
@@ -35,6 +39,20 @@
     {
       "before": ["s"],
       "after": ["<leader>", "<leader>", "s"]
+    },    
+    { "before": [":"],
+     "commands": ["vim.showQuickpickCmdLine"]
+    },
+  ],
+  "vim.visualModeKeyBindingsNonRecursive": [
+    {
+      "before": ["s"],
+      "after": ["<leader>", "<leader>", "s"]
+    },    
+    { "before": [":"],
+     "commands": ["workbench.action.showQuickpickCmdLine"]
     },
   ]
+
+
 }
