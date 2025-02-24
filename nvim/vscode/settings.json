@@ -1,4 +1,5 @@
 
+
 {
     "window.commandCenter": 1,
     "extensions.experimental.affinity": {
@@ -6,8 +7,8 @@
     },
     "editor.lineNumbers": "relative",
     "terminal.integrated.allowChords": false,
-    "terminal.integrated.fontFamily": "JetBrainsMono Nerd Font",
-    "editor.fontFamily": "JetBrainsMono Nerd Font, Menlo, Monaco, 'Courier New', monospace",
+    "terminal.integrated.fontFamily": "Hack Nerd Font",
+    "editor.fontFamily": "Hack Nerd Font, Menlo, Monaco, 'Courier New', monospace",
     "editor.fontLigatures": true,
     // Enable smooth scrolling animation
   "editor.smoothScrolling": true,
@@ -26,7 +27,14 @@
   // Set space as the leader key
   "vim.leader": " ",
   // Enable vim-sneak plugin for improved motion
-  "vim.sneak": true,
+      // removed in favor of easy motion
+  // "vim.sneak": true,
   // Use relative line numbers in normal mode
   "vim.smartRelativeLine": true,
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": ["s"],
+      "after": ["<leader>", "<leader>", "s"]
+    },
+  ]
 }

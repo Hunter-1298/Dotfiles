@@ -1,3 +1,4 @@
+
 // Place your key bindings in this file to override the defaults
 [
 // Cursor Specific Keybindings
@@ -35,21 +36,21 @@
   },
 
 // Navigation
-  // { "key": "space t",
-  //   "command": "workbench.action.terminal.toggleTerminal",
-  //   "when": "terminalFocus"
-  // },
+  { "key": "space t",
+    "command": "workbench.action.terminal.toggleTerminal",
+    "when": "vim.mode == 'Normal'"
+  },
   { "key": "space z",
     "command": "workbench.action.toggleZenMode",
     "when": "!isAuxiliaryWindowFocusedContext"
   },
   { "key": "tab",
     "command": "workbench.action.quickSwitchWindow",
-    "when": "!isAuxiliaryWindowFocusedContext"
+    "when": "!isAuxiliaryWindowFocusedContext && vim.mode == 'Normal'"
   },
   { "key": "shift+tab",
     "command": "workbench.action.quickSwitchWindow",
-    "when": "editorTextFocus && neovim.mode == normal" 
+    "when": "editorTextFocus && vim.mode == normal" 
   },
   {
     "key": "ctrl-h",
@@ -224,7 +225,7 @@
     // Search
     {
       "key": "space s g",
-      "command": "workbench.action.findInFiles",
+      "command": "workbench.action.quickTextSearch",
       "when": "vim.mode == 'Normal' && !terminalFocus"
     },
     {
@@ -315,16 +316,24 @@
     },
 
   //Silly housekeeping to stop chords from ruining my life 
+  {
+    "key": "space d c",  // or whatever keybinding you prefer
+    "command": "workbench.action.files.openFolder",
+    "args": "${fileDirname}",
+    "when": "editorTextFocus"
+},
     {
     "key": "space",
     "command": "workbench.action.terminal.sendSequence",
     "args": { "text": " " },
-    "when": "terminal"
+    "when": "terminalFocus"
   },
   {
     "key": "space",     
     "command": "type",
     "args": { "text": " " },
-    "when": "vim.mode == 'Insert' && editorTextFocus"
+    "when": "vim.mode == 'Insert'"
+
+    
   },
 ]
