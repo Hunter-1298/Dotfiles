@@ -5,6 +5,7 @@
     "extensions.experimental.affinity": {
         "asvetliakov.vscode-neovim": 1
     },
+    "jupyter.debugJustMyCode": false,
     "editor.lineNumbers": "relative",
     "terminal.integrated.allowChords": false,
     "terminal.integrated.fontFamily": "Fira Code iCursive s12, Menlo, Monaco, 'Courier New', monospace",
