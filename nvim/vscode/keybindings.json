@@ -263,58 +263,61 @@
     },
 
   // Debug
-    {
-      "key": "space d a",
-      "command": "workbench.action.debug.selectandstart",
-      "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus) && debuggersAvailable && !terminalFocus"
-    },
-    {
-      "key": "space d t",
-      "command": "workbench.action.debug.stop",
-      "when": "vim.mode == 'Normal' && editorTextFocus && inDebugMode && !focusedSessionIsAttached && !terminalFocus"
-    },
-    {
-      "key": "space d o",
-      "command": "workbench.action.debug.stepOver",
-      "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus) && inDebugMode && debugState == 'stopped' && !terminalFocus"
-    },
-    {
-      "key": "space d b",
-      "command": "editor.debug.action.toggleBreakpoint",
-      "when": "vim.mode == 'Normal' && editorTextFocus && !terminalFocus"
-    },
-    {
-      "key": "space d e",
-      "command": "editor.debug.action.showDebugHover",
-      "when": "vim.mode == 'Normal' && editorTextFocus && inDebugMode && debugState == 'stopped' && !terminalFocus"
-    },
-    {
-      "key": "space d c",
-      "command": "workbench.action.debug.continue",
-      "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus) && inDebugMode && debugState == 'stopped' && !terminalFocus"
-    },
-
+  {
+    "key": "space d a",
+    "command": "workbench.action.debug.selectandstart",
+    "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus) && debuggersAvailable && !terminalFocus"
+  },
+  {
+    "key": "space d s",
+    "command": "workbench.action.debug.stop",
+    "when": "vim.mode == 'Normal' && editorTextFocus && inDebugMode && !focusedSessionIsAttached && !terminalFocus"
+  },
+  {
+    "key": "n",
+    "command": "workbench.action.debug.stepOver",
+    "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus) && inDebugMode && debugState == 'stopped' && !terminalFocus"
+  },
+  {
+    "key": "space d b",
+    "command": "editor.debug.action.toggleBreakpoint",
+    "when": "vim.mode == 'Normal' && editorTextFocus && !terminalFocus"
+  },
+  {
+    "key": "space d e",
+    "command": "editor.debug.action.showDebugHover",
+    "when": "vim.mode == 'Normal' && editorTextFocus && inDebugMode && debugState == 'stopped' && !terminalFocus"
+  },
+  {
+    "key": "c",
+    "command": "workbench.action.debug.continue",
+    "when": "vim.mode == 'Normal' && (editorTextFocus || !inputFocus) && inDebugMode && debugState == 'stopped' && !terminalFocus"
+  },
   // Jupyter notebooks keybindings
   // A is add above, B is add below
-    {
-      "key": "m", 
-      "command": "notebook.cell.insertMarkdownCellBelow",
-      "when": "notebookEditorFocused && !inputFocus && vim.mode == 'Normal'"
-    },
-    {
-      "key": "space enter",
-      "command": "notebook.cell.execute", 
-      "when": "notebookEditorFocused && vim.mode == 'Normal'"
-    },
-    {
-      "key": "alt+j",
-      "command": "notebook.cell.moveDown",
-    },
-    {
-      "key": "alt+k", 
-      "command": "notebook.cell.moveUp",
-    },
-
+  {
+    "key": "m",
+    "command": "notebook.cell.insertMarkdownCellBelow",
+    "when": "notebookEditorFocused && !inputFocus && vim.mode == 'Normal'"
+  },
+  {
+    "key": "space enter",
+    "command": "notebook.cell.execute",
+    "when": "notebookEditorFocused && vim.mode == 'Normal'"
+  },
+  {
+    "key": "alt+j",
+    "command": "notebook.cell.moveDown",
+  },
+  {
+    "key": "alt+k",
+    "command": "notebook.cell.moveUp",
+  },
+  {
+    "key": "space d a",
+    "command": "jupyter.runAndDebugCell",
+    "when": "isWorkspaceTrusted && jupyter.ispythonnotebook && !notebookKernel && notebookCellType == 'code' || isWorkspaceTrusted && jupyter.ispythonnotebook && notebookCellType == 'code' && notebookKernel =~ /^ms-toolsai.jupyter\\// && resource not in 'jupyter.notebookeditor.debugDocuments'"
+  },
   //Silly housekeeping to stop chords from ruining my life 
   {
     "key": "space d c",  // or whatever keybinding you prefer
