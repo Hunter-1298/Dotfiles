@@ -1,22 +1,21 @@
-
-
 {
-    "window.commandCenter": 1,
-    "extensions.experimental.affinity": {
-        "asvetliakov.vscode-neovim": 1
-    },
-    "jupyter.debugJustMyCode": false,
-    "editor.lineNumbers": "relative",
-    "terminal.integrated.allowChords": false,
-    "terminal.integrated.fontFamily": "Fira Code iCursive s12, Menlo, Monaco, 'Courier New', monospace",
-    "editor.fontFamily": "Fira Code iCursive s12, Menlo, Monaco, 'Courier New', monospace",
-    "editor.fontLigatures": true,
-    "prettier.enable": true,
-    "editor.formatOnSave": true,
-    "[python]": {
-      "editor.formatOnSave": true
+  "window.commandCenter": 1,
+  "extensions.experimental.affinity": {
+    "asvetliakov.vscode-neovim": 1
   },
-    // Enable smooth scrolling animation
+  "jupyter.debugJustMyCode": false,
+  "editor.lineNumbers": "relative",
+  "terminal.integrated.allowChords": false,
+  "terminal.integrated.fontFamily": "Hack Nerd Font",
+  "editor.fontFamily": "Hack Nerd Font",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 16,
+  "prettier.enable": true,
+  "editor.formatOnSave": true,
+  "[python]": {
+    "editor.formatOnSave": true
+  },
+  // Enable smooth scrolling animation
   "editor.smoothScrolling": true,
   // Vim Configuration
   // Enable easymotion plugin for quick navigation
@@ -32,28 +31,296 @@
   // Set space as the leader key
   "vim.leader": " ",
   // Enable vim-sneak plugin for improved motion
-      // removed in favor of easy motion
+  // removed in favor of easy motion
   // "vim.sneak": true,
   // Use relative line numbers in normal mode
   "vim.smartRelativeLine": true,
   "vim.normalModeKeyBindingsNonRecursive": [
     {
-      "before": ["s"],
-      "after": ["<leader>", "<leader>", "s"]
-    },    
-    { "before": [":"],
-     "commands": ["vim.showQuickpickCmdLine"]
+      // SNEAK movement
+      "before": [
+        "s"
+      ],
+      "after": [
+        "<leader>",
+        "<leader>",
+        "s"
+      ]
+    },
+    {
+      "before": [
+        ":"
+      ],
+      "commands": [
+        "vim.showQuickpickCmdLine"
+      ]
+    },
+    // Cursor Specific Keybindings for Chat
+    {
+      "before": [
+        "<leader>",
+        "c"
+      ],
+      "commands": [
+        "workbench.panel.aichat.view.focus"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "n",
+        "c"
+      ],
+      "commands": [
+        "aichat.newchataction"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "p"
+      ],
+      "commands": [
+        "workbench.panel.composerViewPane2.view.focus"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "n",
+        "p"
+      ],
+      "commands": [
+        "composer.startComposerPrompt"
+      ]
+    },
+    // Navigation 
+    {
+      "before": [
+        "<leader>",
+        "t"
+      ],
+      "commands": [
+        "workbench.action.terminal.toggleTerminal"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "z"
+      ],
+      "commands": [
+        "workbench.action.toggleZenMode"
+      ]
+    },
+    // File Explorer
+    {
+      "before": [
+        "<leader>",
+        "e"
+      ],
+      "commands": [
+        "workbench.action.toggleSidebarVisibility",
+        // "workbench.files.action.focusFilesExplorer"
+        // "workbench.view.explorer"
+      ],
+    },
+    {
+      "before": [
+        "<leader>",
+        "v",
+        "s"
+      ],
+      "commands": [
+        "workbench.action.splitEditor"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "h",
+        "s"
+      ],
+      "commands": [
+        "workbench.action.splitEditorDown"
+      ]
+    },
+    // Delete Buffer
+    {
+      "before": [
+        "<leader>",
+        "b",
+        "d"
+      ],
+      "commands": [
+        "workbench.action.closeActiveEditor"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "t"
+      ],
+      "commands": [
+        "workbench.action.terminal.toggleTerminal"
+      ],
+      "when": "terminalFocus"
+    },
+    // Search
+    {
+      "before": [
+        "<leader>",
+        "s",
+        "g"
+      ],
+      "commands": [
+        "workbench.action.quickTextSearch"
+      ],
+      "when": "!terminalFocus"
+    },
+    {
+      "before": [
+        "<leader>",
+        "s",
+        "f"
+      ],
+      "commands": [
+        "workbench.action.quickOpen"
+      ],
+      "when": "!terminalFocus"
+    },
+    {
+      "before": [
+        "<leader>",
+        "<leader>"
+      ],
+      "commands": [
+        "workbench.action.showAllEditors"
+      ],
+      "when": "!terminalFocus"
+    },
+    // Debug
+    {
+      "before": [
+        "<leader>",
+        "d",
+        "a"
+      ],
+      "commands": [
+        "workbench.action.debug.selectandstart"
+      ],
+      "when": "debuggersAvailable && !terminalFocus"
+    },
+    {
+      "before": [
+        "<leader>",
+        "d",
+        "s"
+      ],
+      "commands": [
+        "workbench.action.debug.stop"
+      ],
+      "when": "inDebugMode && !focusedSessionIsAttached && !terminalFocus"
+    },
+    {
+      "before": [
+        "<leader>",
+        "n"
+      ],
+      "commands": [
+        "workbench.action.debug.stepOver"
+      ],
+      "when": "inDebugMode && debugState == 'stopped' && vim.mode == 'Normal'"
+    },
+    {
+      "before": [
+        "<leader>",
+        "d",
+        "b"
+      ],
+      "commands": [
+        "editor.debug.action.toggleBreakpoint"
+      ],
+      "when": "!terminalFocus"
+    },
+    {
+      "before": [
+        "<leader>",
+        "d",
+        "t"
+      ],
+      "commands": [
+        "workbench.debug.action.toggleRepl"
+      ],
+      "when": "!terminalFocus"
+    },
+    {
+      "before": [
+        "<leader>",
+        "d",
+        "e"
+      ],
+      "commands": [
+        "editor.debug.action.showDebugHover"
+      ],
+      "when": "inDebugMode && debugState == 'stopped' && !terminalFocus"
+    },
+    {
+      "before": [
+        "<leader>",
+        "c"
+      ],
+      "commands": [
+        "workbench.action.debug.continue"
+      ],
+      "when": "inDebugMode && debugState == 'stopped' && !terminalFocus"
+    },
+    {
+      "before": [
+        "<leader>",
+        "<enter>"
+      ],
+      "commands": [
+        "notebook.cell.execute"
+      ],
+      "when": "notebookEditorFocused && vim.mode == 'Normal'"
+    },
+    {
+      "before": [
+        "<leader>",
+        "d",
+        "c"
+      ],
+      "commands": [
+        "workbench.action.files.openFolder"
+      ],
+      "when": "editorTextFocus"
     },
   ],
   "vim.visualModeKeyBindingsNonRecursive": [
+    //Cursor settings
     {
-      "before": ["s"],
-      "after": ["<leader>", "<leader>", "s"]
-    },    
-    { "before": [":"],
-     "commands": ["workbench.action.showQuickpickCmdLine"]
+      "before": [
+        "<leader>",
+        "a",
+        "c"
+      ],
+      "commands": [
+        "aichat.insertselectionintochat"
+      ]
     },
-  ]
-
-
+    {
+      "before": [
+        "<leader>",
+        "i"
+      ],
+      "commands": [
+        "aipopup.action.modal.generate"
+      ],
+      "args": {
+        "invocationType": "new"
+      }
+    },
+  ],
+  "python.createEnvironment.trigger": "off"
 }
