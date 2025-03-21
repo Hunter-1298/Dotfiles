@@ -4,18 +4,12 @@
   {
     "key": "tab",
     "command": "workbench.action.quickSwitchWindow",
-    "when": "!isAuxiliaryWindowFocusedContext",
+    "when": "!isAuxiliaryWindowFocusedContext && !terminalFocus && !editorTextFocus && vim.mode != 'Insert'",
   },
   {
     "key": "shift+tab",
     "command": "workbench.action.quickSwitchWindow",
-    "when": "editorTextFocus",
-  },
-  // Switch between debugger and terminal easily
-  {
-    "key": "tab",
-    "command": "workbench.action.terminal.focus",
-    "when": "workbench.panel.repl.view.active",
+    "when": "editorTextFocus && vim.mode != 'Insert'",
   },
   {
     "key": "ctrl-h",
@@ -26,6 +20,11 @@
     "key": "ctrl-h",
     "command": "workbench.action.terminal.focus",
     "when": "editorTextFocus && terminalIsOpen && terminalPosition == 'left'"
+  },
+  {
+    "key": "ctrl-h",
+    "command": "workbench.view.explorer",
+    "when": "editorTextFocus && sideBarVisible"
   },
   {
     "key": "ctrl-l",
@@ -54,7 +53,6 @@
   {
     "key": "ctrl-j",
     "command": "workbench.action.navigateDown",
-    "when": "!terminalIsOpen"
   },
   {
     "key": "ctrl-j",
@@ -169,6 +167,10 @@
     "key": "alt+k",
     "command": "notebook.cell.moveUp",
   },
+  {
+    "key": "alt+k",
+    "command": "notebook.cell.moveUp",
+  },
   // Debugging stuff
   {
     "key": "ctrl+n",
@@ -214,6 +216,11 @@
     "key": "ctrl+s",
     "command": "workbench.action.debug.stop",
     "when": "inDebugMode && !focusedSessionIsAttach"
+  },
+  {
+    "key": "ctrl+s",
+    "command": "workbench.action.debug.disconnect",
+    "when": "focusedSessionIsAttach && inDebugMode"
   },
   {
     "key": "ctrl+t",
