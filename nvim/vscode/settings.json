@@ -1,266 +1,4 @@
-{
-  "window.commandCenter": 2,
-  "extensions.experimental.affinity": {
-    "asvetliakov.vscode-neovim": 1
-  },
-  "jupyter.debugJustMyCode": false,
-  "editor.lineNumbers": "relative",
-  "terminal.integrated.allowChords": false,
-  "terminal.integrated.fontFamily": "Hack Nerd Font",
-  "editor.fontFamily": "Hack Nerd Font",
-  "editor.fontLigatures": true,
-  "editor.fontSize": 16,
-  "prettier.enable": true,
-  "editor.formatOnSave": true,
-  "[python]": {
-    "editor.formatOnSave": true
-  },
-  // Enable smooth scrolling animation
-  "editor.smoothScrolling": true,
-  // Vim Configuration
-  // Enable easymotion plugin for quick navigation
-  "vim.easymotion": true,
-  // Enable incremental search highlighting
-  "vim.incsearch": true,
-  // Use system clipboard for vim operations
-  "vim.useSystemClipboard": true,
-  // Enable Ctrl key combinations
-  "vim.useCtrlKeys": true,
-  // Enable search highlight
-  "vim.hlsearch": true,
-  // Set space as the leader key
-  "vim.leader": " ",
-  // Enable vim-sneak plugin for improved motion
-  // removed in favor of easy motion
-  // "vim.sneak": true,
-  // Use relative line numbers in normal mode
-  "vim.smartRelativeLine": true,
-  "vim.normalModeKeyBindingsNonRecursive": [
-    {
-      // SNEAK movement
-      "before": [
-        "s"
-      ],
-      "after": [
-        "<leader>",
-        "<leader>",
-        "s"
-      ]
-    },
-    {
-      "before": [
-        ":"
-      ],
-      "commands": [
-        "vim.showQuickpickCmdLine"
-      ]
-    },
-    // Cursor Specific Keybindings for Chat
-    {
-      "before": [
-        "<leader>",
-        "c"
-      ],
-      "commands": [
-        "workbench.panel.aichat.view.focus"
-      ]
-    },
-    {
-      "before": [
-        "<leader>",
-        "n",
-        "c"
-      ],
-      "commands": [
-        "aichat.newchataction"
-      ]
-    },
-    {
-      "before": [
-        "<leader>",
-        "p"
-      ],
-      "commands": [
-        "workbench.panel.composerViewPane2.view.focus"
-      ]
-    },
-    {
-      "before": [
-        "<leader>",
-        "n",
-        "p"
-      ],
-      "commands": [
-        "composer.startComposerPrompt"
-      ]
-    },
-    // Navigation 
-    {
-      "before": [
-        "<leader>",
-        "t"
-      ],
-      "commands": [
-        "workbench.action.terminal.toggleTerminal"
-      ]
-    },
-    {
-      "before": [
-        "<leader>",
-        "z"
-      ],
-      "commands": [
-        "workbench.action.toggleZenMode"
-      ]
-    },
-    // File Explorer
-    {
-      "before": [
-        "<leader>",
-        "e"
-      ],
-      "commands": [
-        "workbench.action.toggleSidebarVisibility",
-        // "workbench.files.action.focusFilesExplorer"
-        // "workbench.view.explorer"
-      ],
-    },
-    {
-      "before": [
-        "<leader>",
-        "v",
-        "s"
-      ],
-      "commands": [
-        "workbench.action.splitEditor"
-      ]
-    },
-    {
-      "before": [
-        "<leader>",
-        "h",
-        "s"
-      ],
-      "commands": [
-        "workbench.action.splitEditorDown"
-      ]
-    },
-    // Delete Buffer
-    {
-      "before": [
-        "<leader>",
-        "b",
-        "d"
-      ],
-      "commands": [
-        "workbench.action.closeActiveEditor"
-      ]
-    },
-    {
-      "before": [
-        "<leader>",
-        "t"
-      ],
-      "commands": [
-        "workbench.action.terminal.toggleTerminal"
-      ],
-      "when": "terminalFocus"
-    },
-    // Search
-    {
-      "before": [
-        "<leader>",
-        "s",
-        "g"
-      ],
-      "commands": [
-        "workbench.action.quickTextSearch"
-      ],
-      "when": "!terminalFocus"
-    },
-    {
-      "before": [
-        "<leader>",
-        "s",
-        "f"
-      ],
-      "commands": [
-        "workbench.action.quickOpen"
-      ],
-      "when": "!terminalFocus"
-    },
-    {
-      "before": [
-        "<leader>",
-        "<leader>"
-      ],
-      "commands": [
-        "workbench.action.showAllEditors"
-      ],
-      "when": "!terminalFocus"
-    },
-    // Debug
-    {
-      "before": [
-        "<leader>",
-        "d",
-        "a"
-      ],
-      "commands": [
-        "workbench.action.debug.selectandstart"
-      ],
-      "when": "debuggersAvailable && !terminalFocus"
-    },
-    {
-      "before": [
-        "<leader>",
-        "d",
-        "s"
-      ],
-      "commands": [
-        "workbench.action.debug.stop"
-      ],
-      "when": "inDebugMode && !focusedSessionIsAttached && !terminalFocus"
-    },
-    {
-      "before": [
-        "<leader>",
-        "d",
-        "n"
-      ],
-      "commands": [
-        "workbench.action.debug.stepOver"
-      ],
-      "when": "inDebugMode && debugState == 'stopped' && vim.mode == 'Normal'"
-    },
-    {
-      "before": [
-        "<leader>",
-        "d",
-        "b"
-      ],
-      "commands": [
-        "editor.debug.action.toggleBreakpoint"
-      ],
-      "when": "!terminalFocus"
-    },
-    {
-      "before": [
-        "<leader>",
-        "d",
-        "t"
-      ],
-      "commands": [
-        "workbench.debug.action.toggleRepl"
-      ],
-      "when": "!terminalFocus"
-    },
-    {
-      "before": [
-        "<leader>",
-        "d",
-        "e"
-      ],
+    ],
       "commands": [
         "editor.debug.action.showDebugHover"
       ],
@@ -324,5 +62,278 @@
       }
     },
   ],
-  "python.createEnvironment.trigger": "off"
+  "workbench.colorTheme": "Monokai Pro (Filter Ristretto)",
+  "workbench.iconTheme": "Monokai Pro (Filter Ristretto) Icons",
 }
+= 'stopped' && vim.mode == 'Normal'"
+    },
+    {
+      "before": [
+        "<leader>",
+        "d",
+        "b"
+      ],
+      "commands": [
+        "editor.debug.action.toggleBreakpoint"
+      ],
+      "when": "!terminalFocus"
+    },
+    {
+      "before": [
+        "<leader>",
+        "d",
+        "t"
+      ],
+      "commands": [
+        "workbench.debug.action.toggleRepl"
+      ],
+      "when": "!terminalFocus"
+    },
+    {
+      "before": [
+        "<leader>",
+        "d",
+        "e"
+     ],
+      "when": "inDebugMode && debugState =rkbench.action.quickTextSearch"
+      ],
+      "when": "!terminalFocus"
+    },
+    {
+      "before": [
+        "<leader>",
+        "s",
+        "f"
+      ],
+      "commands": [
+        "workbench.action.quickOpen"
+      ],
+      "when": "!terminalFocus"
+    },
+    {
+      "before": [
+        "<leader>",
+        "<leader>"
+      ],
+      "commands": [
+        "workbench.action.showAllEditors"
+      ],
+      "when": "!terminalFocus"
+    },
+    // Debug
+    {
+      "before": [
+        "<leader>",
+        "d",
+        "a"
+      ],
+      "commands": [
+        "workbench.action.debug.selectandstart"
+      ],
+      "when": "debuggersAvailable && !terminalFocus"
+    },
+    {
+      "before": [
+        "<leader>",
+        "d",
+        "s"
+      ],
+      "commands": [
+        "workbench.action.debug.stop"
+      ],
+      "when": "inDebugMode && !focusedSessionIsAttached && !terminalFocus"
+    },
+    {
+      "before": [
+        "<leader>",
+        "d",
+        "n"
+      ],
+      "commands": [
+        "workbench.action.debug.stepOver"
+   ": [
+        "woisibility",
+        // "workbench.files.action.focusFilesExplorer"
+        // "workbench.view.explorer"
+      ],
+    },
+    {
+      "before": [
+        "<leader>",
+        "v",
+        "s"
+      ],
+      "commands": [
+        "workbench.action.splitEditor"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "h",
+        "s"
+      ],
+      "commands": [
+        "workbench.action.splitEditorDown"
+      ]
+    },
+    // Delete Buffer
+    {
+      "before": [
+        "<leader>",
+        "b",
+        "d"
+      ],
+      "commands": [
+        "workbench.action.closeActiveEditor"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "t"
+      ],
+      "commands": [
+        "workbench.action.terminal.toggleTerminal"
+      ],
+      "when": "terminalFocus"
+    },
+    // Search
+    {
+      "before": [
+        "<leader>",
+        "s",
+        "g"
+      ],
+      "commandsn.toggleSidebarVs": [
+        "aichat.newchataction"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "p"
+      ],
+      "commands": [
+        "workbench.panel.composerViewPane2.view.focus"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "n",
+        "p"
+      ],
+      "commands": [
+        "composer.startComposerPrompt"
+      ]
+    },
+    // Navigation 
+    {
+      "before": [
+        "<leader>",
+        "t"
+      ],
+      "commands": [
+        "workbench.action.terminal.toggleTerminal"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "z"
+      ],
+      "commands": [
+        "workbench.action.toggleZenMode"
+      ]
+    },
+    // File Explorer
+    {
+      "before": [
+        "<leader>",
+        "e"
+      ],
+      "commands": [
+        "workbench.actio     "c"
+      ],
+      "command{
+  "window.commandCenter": 2,
+  "extensions.experimental.affinity": {
+    "asvetliakov.vscode-neovim": 1
+  },
+  "jupyter.debugJustMyCode": false,
+  "editor.lineNumbers": "relative",
+  "editor.cursorSurroundingLines": 15,
+  "editor.cursorStyle": "block-outline",
+  "editor.cursorSmoothCaretAnimation": true,
+  "editor.cursorBlinking": "phase",
+  "terminal.integrated.allowChords": false,
+  "terminal.integrated.fontFamily": "Hack Nerd Font",
+  "editor.fontFamily": "Hack Nerd Font",
+  "workbench.colorCustomizations": {
+    "editorCursor.foreground": "#00BFAE", // Set cursor color to light teal green
+    "terminalCursor.foreground": "#00BFAE", // Set cursor color to light teal green
+  },
+  "editor.fontLigatures": true,
+  "editor.fontSize": 14,
+  "prettier.enable": true,
+  "editor.formatOnSave": true,
+  "[python]": {
+    "editor.formatOnSave": true
+  },
+  // Enable smooth scrolling animation
+  // Turning off in order for scolling to work for jupyter notebooks
+  // "editor.smoothScrolling": true,
+  // Vim Configuration
+  // Enable easymotion plugin for quick navigation
+  "vim.easymotion": true,
+  // Enable incremental search highlighting
+  "vim.incsearch": true,
+  // Use system clipboard for vim operations
+  "vim.useSystemClipboard": true,
+  // Enable Ctrl key combinations
+  "vim.useCtrlKeys": true,
+  // Enable search highlight
+  "vim.hlsearch": true,
+  // Set space as the leader key
+  "vim.leader": " ",
+  // Enable vim-sneak plugin for improved motion
+  // removed in favor of easy motion
+  // "vim.sneak": true,
+  // Use relative line numbers in normal mode
+  "vim.smartRelativeLine": true,
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      // SNEAK movement
+      "before": [
+        "s"
+      ],
+      "after": [
+        "<leader>",
+        "<leader>",
+        "s"
+      ]
+    },
+    {
+      "before": [
+        ":"
+      ],
+      "commands": [
+        "vim.showQuickpickCmdLine"
+      ]
+    },
+    // Cursor Specific Keybindings for Chat
+    {
+      "before": [
+        "<leader>",
+        "c"
+      ],
+      "commands": [
+        "workbench.panel.aichat.view.focus"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "n",
+   
