@@ -51,13 +51,9 @@
     "when": "terminalFocus || workbench.panel.repl.view.active"
   },
   {
-    "key": "ctrl-j",
-    "command": "workbench.action.navigateDown",
-  },
-  {
-    "key": "ctrl-j",
-    "command": "workbench.action.terminal.focus",
-    "when": "editorTextFocus && terminalIsOpen"
+    "key": "ctrl+j",
+    "command": "workbench.action.terminal.toggleTerminal",
+    "when": "(vim.mode == 'Normal' || vim.mode == 'Visual') && (editorTextFocus || !inputFocus) && !terminalFocus && !filesExplorerFocus"
   },
   {
     "key": "tab",
@@ -152,6 +148,15 @@
     "command": "selectPrevSuggestion",
     "when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible || editorTextFocus && hasOtherSuggestions && textInputFocus"
   },
+  {
+    "key": "ctrl+d",
+    "command": "workbench.debug.action.toggleRepl", 
+    "when": "debuggersAvailable"
+  },
+  {
+    "key": "ctrl+t",
+    "command": "workbench.action.terminal.focus"
+  },
   // Jupyter notebooks keybindings
   // A is add above, B is add below
   {
@@ -160,16 +165,14 @@
     "when": "notebookEditorFocused && !inputFocus && vim.mode == 'Normal'"
   },
   {
-    "key": "alt+j",
+    "key": "ctrl+j",
     "command": "notebook.cell.moveDown",
+    "when": "notebookEditorFocused && !inputFocus"
   },
   {
-    "key": "alt+k",
+    "key": "ctrl+k", 
     "command": "notebook.cell.moveUp",
-  },
-  {
-    "key": "alt+k",
-    "command": "notebook.cell.moveUp",
+    "when": "notebookEditorFocused && !inputFocus"
   },
   // Debugging stuff
   {
@@ -221,10 +224,5 @@
     "key": "ctrl+s",
     "command": "workbench.action.debug.disconnect",
     "when": "focusedSessionIsAttach && inDebugMode"
-  },
-  {
-    "key": "ctrl+t",
-    "command": "workbench.debug.action.toggleRepl",
-    "when": "inDebugMode && !focusedSessionIsAttach"
   },
 ]

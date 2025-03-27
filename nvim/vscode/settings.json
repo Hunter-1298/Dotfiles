@@ -103,16 +103,6 @@
         "composer.startComposerPrompt"
       ]
     },
-    // Navigation 
-    {
-      "before": [
-        "<leader>",
-        "t"
-      ],
-      "commands": [
-        "workbench.action.terminal.toggleTerminal"
-      ]
-    },
     {
       "before": [
         "<leader>",
@@ -332,10 +322,7 @@
         "invocationType": "new"
       }
     },
-    {
-      "before": [":"],
-      "commands": ["vim.showQuickpickCmdLine"],
-    }
 
   ],
+  "notebook.lineNumbers": "on",
 }
