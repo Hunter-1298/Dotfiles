@@ -15,6 +15,7 @@ return {
         -- Baic debugging keymap, feel free to change to your liking!
         { '<leader>dc', dap.continue, desc = 'Debug: Start/Continue' },
         { '<leader>di', dap.step_into, desc = 'Debug: Step Into' },
+        { '<leader>dr', dap.restart, desc = 'Debug: Step Into' },
         { '<leader>dn', dap.step_over, desc = 'Debug: Next - (Step Over)' },
         { '<leader>do', dap.step_out, desc = 'Debug: Step Out' },
         { '<leader>db', dap.toggle_breakpoint, desc = 'Debug: Toggle Breakpoint' },
@@ -30,15 +31,6 @@ return {
             end
           end,
           desc = 'Debug: Next - (Step Over)',
-        },
-        {
-          'c',
-          function()
-            if dap.status() ~= 'inactive' then -- Check if the debugger is active
-              dap.continue()
-            end
-          end,
-          desc = 'Debug: Continue',
         },
         {
           's',
@@ -129,6 +121,10 @@ return {
       -- Automatically open/close DAP UI
       dap.listeners.after.event_initialized['dapui_config'] = function()
         dapui.open()
+      end
+      -- Automatically close DAP UI when the debugger stops
+      dap.listeners.after.event_terminated['dapui_config'] = function()
+        dapui.close()
       end
 
       local opts = { noremap = true, silent = true }
