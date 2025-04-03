@@ -21,34 +21,6 @@ return {
         { '<leader>dq', dap.terminate, desc = 'Debug: Quit' },
         { '<leader>dt', dapui.toggle, desc = 'Debug: Toggle' },
         { '<leader>dx', dap.repl.open, desc = 'Debug: Repl' },
-        -- Conditional keybindings for debugger actions
-        {
-          'n',
-          function()
-            if dap.status() ~= 'inactive' then -- Check if the debugger is active
-              dap.step_over()
-            end
-          end,
-          desc = 'Debug: Next - (Step Over)',
-        },
-        {
-          'c',
-          function()
-            if dap.status() ~= 'inactive' then -- Check if the debugger is active
-              dap.continue()
-            end
-          end,
-          desc = 'Debug: Continue',
-        },
-        {
-          's',
-          function()
-            if dap.status() ~= 'inactive' then -- Check if the debugger is active
-              dap.step_into()
-            end
-          end,
-          desc = 'Debug: Step Into',
-        },
         {
           '<leader>dB',
           function()
@@ -80,25 +52,7 @@ return {
       local dapui = require 'dapui'
       local dap_python = require 'dap-python'
 
-      require('dapui').setup {
-        layouts = {
-          {
-            elements = {
-              'scopes',
-            },
-            size = 0.3,
-            position = 'left',
-          },
-          {
-            elements = {
-              { id = 'repl', size = 0.7 },
-              { id = 'breakpoints', size = 0.3 },
-            },
-            size = 0.3,
-            position = 'bottom',
-          },
-        },
-      }
+      require('dapui').setup {}
       require('nvim-dap-virtual-text').setup {
         commented = true, -- Show virtual text alongside comment
       }
@@ -120,7 +74,7 @@ return {
       })
 
       vim.fn.sign_define('DapStopped', {
-        text = '->', -- or "→"
+        text = '', -- or "→"
         texthl = 'DiagnosticSignWarn',
         linehl = 'Visual',
         numhl = 'DiagnosticSignWarn',

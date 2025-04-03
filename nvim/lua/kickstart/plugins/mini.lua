@@ -26,6 +26,9 @@ return {
       }
       -- require('mini.starter').setup()
       require('mini.cursorword').setup()
+      -- require('mini.statusline').setup()
+      -- require('mini.indentscope').setup()
+      -- require('mini.animate').setup()
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
       --  and try some other statusline plugin

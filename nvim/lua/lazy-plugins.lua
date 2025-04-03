@@ -36,21 +36,19 @@ require('lazy').setup({
   require 'kickstart/plugins/cmp',
 
   -- require 'kickstart/plugins/tokyonight',
-  require 'kickstart/plugins/cyberdream',
+  require 'kickstart/plugins/onedarkpro',
+  -- require 'kickstart/plugins/cyberdream',
   -- require 'kickstart/plugins/rosepine',
   -- require 'kickstart/plugins/kanagawa-theme',
-
   require 'kickstart/plugins/todo-comments',
-
   require 'kickstart/plugins/mini',
-
+  require 'kickstart.plugins.snacks',
   require 'kickstart/plugins/treesitter',
-
   require 'kickstart.plugins.debug',
-  require 'kickstart.plugins.indent_line',
   require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
+  require 'kickstart/plugins/lualine',
   -- require 'kickstart.plugins.cyberdream',
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.

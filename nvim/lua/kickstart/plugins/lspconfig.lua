@@ -194,7 +194,27 @@ return {
       local util = require 'lspconfig.util'
       local servers = {
         -- clangd = {},
-        pyright = {},
+        --  basedpyright = {
+        -- Choose a type checking mode: "off", "basic", or "strict"
+        basedpyright = {
+          settings = {
+            basedpyright = {
+              typeCheckingMode = 'basic',
+              -- Disable specific type checking reports
+              reportMissingImports = true,
+              reportMissingTypeStubs = false,
+              reportUnknownMemberType = false,
+              reportUnknownArgumentType = false,
+              reportUnknownVariableType = false,
+              reportUnknownParameterType = false,
+              reportOptionalMemberAccess = false,
+              reportOptionalSubscript = false,
+              reportOptionalCall = false,
+              reportGeneralTypeIssues = false,
+              ignore = { '**/lightning/pytorch' },
+            },
+          },
+        },
         emmet_language_server = {},
         ts_ls = {},
         cssls = {},
