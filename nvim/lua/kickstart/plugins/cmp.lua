@@ -122,6 +122,9 @@ return {
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
+          per_filetype = {
+            python = { 'codecompanion' },
+          },
         },
         formatting = {
           format = require('tailwindcss-colorizer-cmp').formatter,

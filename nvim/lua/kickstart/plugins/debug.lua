@@ -14,33 +14,17 @@ return {
       return {
         -- Baic debugging keymap, feel free to change to your liking!
         { '<leader>dc', dap.continue, desc = 'Debug: Start/Continue' },
+        { '<C-c>', dap.continue, desc = 'Debug: Start/Continue' },
         { '<leader>di', dap.step_into, desc = 'Debug: Step Into' },
+        { '<C-i>', dap.step_into, desc = 'Debug: Step Into' },
         { '<leader>dr', dap.restart, desc = 'Debug: Step Into' },
         { '<leader>dn', dap.step_over, desc = 'Debug: Next - (Step Over)' },
+        { '<C-n>', dap.step_over, desc = 'Debug: Next - (Step Over)' },
         { '<leader>do', dap.step_out, desc = 'Debug: Step Out' },
         { '<leader>db', dap.toggle_breakpoint, desc = 'Debug: Toggle Breakpoint' },
         { '<leader>dq', dap.terminate, desc = 'Debug: Quit' },
         { '<leader>dt', dapui.toggle, desc = 'Debug: Toggle' },
         { '<leader>dx', dap.repl.open, desc = 'Debug: Repl' },
-        -- Conditional keybindings for debugger actions
-        {
-          'n',
-          function()
-            if dap.status() ~= 'inactive' then -- Check if the debugger is active
-              dap.step_over()
-            end
-          end,
-          desc = 'Debug: Next - (Step Over)',
-        },
-        {
-          's',
-          function()
-            if dap.status() ~= 'inactive' then -- Check if the debugger is active
-              dap.step_into()
-            end
-          end,
-          desc = 'Debug: Step Into',
-        },
         {
           '<leader>dB',
           function()

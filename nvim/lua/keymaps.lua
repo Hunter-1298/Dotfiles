@@ -66,11 +66,9 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
--- Resize splits using Alt + h, j, k, l
-vim.keymap.set('n', '<A-l>', '<C-w><', { desc = 'Resize window left' })
-vim.keymap.set('n', '<A-h>', '<C-w>>', { desc = 'Resize window right' })
-vim.keymap.set('n', '<A-j>', '<C-w>+', { desc = 'Resize window down' })
-vim.keymap.set('n', '<A-k>', '<C-w>-', { desc = 'Resize window up' })
+-- Resize splits using Ctrl + Shift + h, l
+vim.keymap.set('n', '<Left>', '<C-w><', { desc = 'Resize window left' })
+vim.keymap.set('n', '<Right>', '<C-w>>', { desc = 'Resize window right' })
 
 -- TOGGLE TERM
 vim.keymap.set('n', '<leader>t', ':ToggleTerm size=10 direction=float<CR>', {
