@@ -9,7 +9,7 @@ vim.api.nvim_set_keymap('n', '<leader>cd', ':cd %:p:h<CR>', { noremap = true, si
 -- vim.keymap.set('v', '<leader>ct', '<cmd>norm gc<CR>', { noremap = false, silent = true, desc = 'Comment Toggle' })
 
 -- Setting vsp buffer keymap
-vim.keymap.set('n', '<leader>vsp', function()
+vim.keymap.set('n', '<leader>v', function()
   local buffer_number = vim.fn.input 'Buffer number: '
   if buffer_number == '' then
     return -- Exit if the prompt is canceled or left empty
@@ -81,11 +81,11 @@ vim.keymap.set('n', '<leader>ht', ':ToggleTerm size=10 direction=horizontal<CR>'
   silent = true,
   desc = 'Toggle horizontal Terminal on Desktop',
 })
-vim.keymap.set('n', '<leader>vt', ':ToggleTerm size=40 direction=vertical<CR>', {
-  noremap = true,
-  silent = true,
-  desc = 'Toggle Vertical Terminal on Desktop',
-})
+-- vim.keymap.set('n', '<leader>vt', ':ToggleTerm size=40 direction=vertical<CR>', {
+--   noremap = true,
+--   silent = true,
+--   desc = 'Toggle Vertical Terminal on Desktop',
+-- })
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 

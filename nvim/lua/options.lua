@@ -8,6 +8,10 @@ vim.opt.expandtab = true
 vim.o.laststatus = 3
 -- Make line numbers default
 vim.opt.number = true
+vim.opt.guicursor = {
+  'n-v-c:block',
+  'i:hor25', -- vertical line in insert
+}
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
 vim.opt.relativenumber = true
