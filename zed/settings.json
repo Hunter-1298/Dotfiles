@@ -8,7 +8,8 @@
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
     "terminal": {
-        "dock": "bottom"
+        "dock": "bottom",
+        "cursor_shape": "bar"
     },
     "ui_font_size": 16,
     "tab_size": 4,
@@ -36,7 +37,7 @@
     "assistant": {
         "default_model": {
             "provider": "zed.dev",
-            "model": "claude-3-5-sonnet-latest"
+            "model": "claude-3-7-sonnet-thinking-latest"
         },
         "version": "2"
     },
@@ -106,7 +107,7 @@
         "dock": "left"
     },
     "chat_panel": {
-        "dock": "left"
+        "dock": "right"
     },
     "tabs": {
         "file_icons": true,

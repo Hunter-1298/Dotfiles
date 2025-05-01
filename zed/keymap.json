@@ -6,18 +6,13 @@
 // To see the default key bindings run `zed: open default keymap`
 // from the command palette.
 [
-    {
-        "context": "Workspace && vim_mode == normal",
-        "bindings": {
-            "shift shift": "file_finder::Toggle",
-            "space v": "pane::SplitRight"
-        }
-    },
+    // sends command to the assistant
     // Toggle terminal
     {
         "context": "Editor && vim_mode == normal",
         "bindings": {
-            "space t": "terminal_panel::ToggleFocus"
+            "space t": "terminal_panel::ToggleFocus",
+            "space v": "pane::SplitRight"
         }
     },
     {
@@ -70,8 +65,8 @@
 
             // + Buffers
             // Switch between buffers
-            "shift-h": "pane::ActivatePreviousItem",
-            "shift-l": "pane::ActivateNextItem",
+            "shift-tab": "pane::ActivatePreviousItem",
+            "tab": "pane::ActivateNextItem",
             // Close active panel
             "shift-q": "pane::CloseActiveItem",
             "ctrl-q": "pane::CloseActiveItem",
@@ -112,7 +107,7 @@
         "context": "Editor && vim_operator == c",
         "bindings": {
             "c": "vim::CurrentLine",
-            "r": "editor::Rename" // zed specific
+            "r": "editor::Rename" // zed specifc
         }
     },
     // Code Action
@@ -157,7 +152,7 @@
     {
         "context": "GitPanel",
         "bindings": {
-            "shift-tab": "project_panel::ToggleFocus"
+            "tab": "project_panel::ToggleFocus"
         }
     },
     // Panel nagivation
@@ -180,7 +175,23 @@
     {
         "context": "vim_mode == visual",
         "bindings": {
-            "space r ": "repl::Run"
+            "space r ": "repl::RunInPlace"
+        }
+    },
+    {
+        "context": "Editor",
+        "bindings": {
+            // "tab": "menu::SelectNext", // move to next item
+            "tab": "menu::SelectNext", // move to next item
+            "shift-tab": "menu::SelectPrevious" // move to previous item
+        }
+    },
+    {
+        "context": "Editor && (showing_code_actions || showing_completions)",
+        "bindings": {
+            // "tab": "menu::SelectNext", // move to next item
+            "tab": "editor::ContextMenuNext",
+            "shift-tab": "editor::ContextMenuPrevious"
         }
     }
 ]
