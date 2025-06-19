@@ -8,18 +8,41 @@
 [
     // sends command to the assistant
     // Toggle terminal
+    // "f5": "debugger::RerunLastSession"
+    // "shift-f5": "debugger::Stop",
+    // "ctrl-shift-f5": "debugger::Restart",
+    // "f6": "debugger::Pause",
+    // "f7": "debugger::StepOver",
+    // "ctrl-f11": "debugger::StepInto",
+    // "shift-f11": "debugger::StepOut",
+    // "ctrl-shift-d": "debug_panel::ToggleFocus",
+    // },
+    {
+        "context": "Workspace && debugger_stopped",
+        "bindings": {
+            "space d c": "debugger::Continue",
+            "space d i": "debugger::StepInto",
+            "space d o": "debugger::StepOut",
+            "ctrl-n": "debugger::StepOver",
+            "space d r": "debugger::RerunLastSession"
+        }
+    },
     {
         "context": "Editor && vim_mode == normal",
         "bindings": {
             "space t": "terminal_panel::ToggleFocus",
-            "space v": "pane::SplitRight"
+            "space v": "pane::SplitRight",
+            "space d a": "debugger::Start",
+            "space d s": "debugger::Stop",
+            "space d b": "editor::ToggleBreakpoint"
         }
     },
     {
         "context": "Editor && (vim_mode == normal || vim_mode == visual) && !VimWaiting && !menu",
         "bindings": {
             // Chat with AI
-            "space a c": "assistant::ToggleFocus",
+            "space a c": "agent::ToggleFocus",
+            "space a n": "agent::NewTextThread",
             "space a i": "assistant::InlineAssist"
         }
     },
@@ -183,7 +206,9 @@
         "bindings": {
             // "tab": "menu::SelectNext", // move to next item
             "tab": "menu::SelectNext", // move to next item
-            "shift-tab": "menu::SelectPrevious" // move to previous item
+            "shift-tab": "menu::SelectPrevious", // move to previous item
+            "space a t": "workspace::ToggleRightDock",
+            "space d t": "workspace::ToggleBottomDock"
         }
     },
     {
