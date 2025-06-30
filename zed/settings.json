@@ -34,16 +34,21 @@
         "right_padding": 0.15
     },
     // Use Copilot Chat AI as default
-    "assistant": {
+    "agent": {
+        "inline_assistant_model": {
+            "provider": "zed.dev",
+            "model": "claude-sonnet-4-latest"
+        },
+        "default_profile": "write",
         "default_model": {
             "provider": "zed.dev",
-            "model": "claude-3-7-sonnet-thinking-latest"
+            "model": "claude-sonnet-4"
         },
         "version": "2"
     },
     "theme": {
         "mode": "system",
-        "light": "Catppuccin Frappé",
+        "light": "Ayu Mirage",
         "dark": "One Dark"
     },
     "lsp": {

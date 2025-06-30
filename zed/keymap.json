@@ -207,8 +207,8 @@
             // "tab": "menu::SelectNext", // move to next item
             "tab": "menu::SelectNext", // move to next item
             "shift-tab": "menu::SelectPrevious", // move to previous item
-            "space a t": "workspace::ToggleRightDock",
-            "space d t": "workspace::ToggleBottomDock"
+            "space a q": "workspace::ToggleRightDock",
+            "space d q": "workspace::ToggleBottomDock"
         }
     },
     {
