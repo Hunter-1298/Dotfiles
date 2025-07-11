@@ -7,6 +7,30 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+    "ssh_connections": [
+    {
+      "host": "100.95.205.86",
+      "username": "hshayde",
+      "projects": [
+        {
+          "paths": [
+            "/home/hshayde/Projects"
+          ]
+        },
+        {
+          "paths": [
+            "/home/hshayde/Projects/MIT/AMR"
+          ]
+        },
+        {
+          "paths": [
+            "/home/hshayde/Projects/MIT/AMR/best_checkpoints"
+          ]
+        }
+      ],
+      "nickname": "PC"
+    }
+  ],
     "terminal": {
         "dock": "bottom",
         "cursor_shape": "bar"

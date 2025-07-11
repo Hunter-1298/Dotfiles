@@ -1,0 +1,42 @@
+theme = "nightfox"
+#theme = "zed_onedark"
+[editor]
+line-number = "relative"
+cursorline = true
+bufferline = "multiple"
+end-of-line-diagnostics = "hint"
+true-color = true
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+
+[editor.indent-guides]
+character = "╎"
+render = true
+
+[editor.lsp]
+# Disable automatically popups of signature parameter help
+auto-signature-help = false
+# Show LSP messages in the status line
+display-messages = true
+
+[editor.statusline]
+left = ["mode", "spinner", "version-control", "file-name"]
+
+[editor.inline-diagnostics]
+cursor-line = "error" # Show inline diagnostics when the cursor is on the line
+other-lines = "disable" # Don't expand diagnostics unless the cursor is on the line
+
+[keys.normal]
+A-x = "extend_to_line_bounds"
+X = "select_line_above"
+"tab" = "goto_next_buffer"
+"S-tab" = "goto_previous_buffer"
+
+[keys.select]
+A-x = "extend_to_line_bounds"
+X = "select_line_above"
+

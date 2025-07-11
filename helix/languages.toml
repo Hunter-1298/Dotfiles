@@ -1,0 +1,12 @@
+# in languages.toml
+[[language]]
+name = "python"
+language-servers = ["pyright", "ruff", "pylyzer"]
+[language-server.pyright.config.python.analysis]
+typeCheckingMode = "basic"
+[language-server.ruff]
+command = "ruff"
+args = ["server"]
+[language-server.pylyzer]
+command = "pylyzer"
+args = ["--server"]

@@ -10,12 +10,12 @@
     // Toggle terminal
     // "f5": "debugger::RerunLastSession"
     // "shift-f5": "debugger::Stop",
-    // "ctrl-shift-f5": "debugger::Restart",
+    // "cmd-shift-f5": "debugger::Restart",
     // "f6": "debugger::Pause",
     // "f7": "debugger::StepOver",
-    // "ctrl-f11": "debugger::StepInto",
+    // "cmd-f11": "debugger::StepInto",
     // "shift-f11": "debugger::StepOut",
-    // "ctrl-shift-d": "debug_panel::ToggleFocus",
+    // "cmd-shift-d": "debug_panel::ToggleFocus",
     // },
     {
         "context": "Workspace && debugger_stopped",
@@ -23,7 +23,7 @@
             "space d c": "debugger::Continue",
             "space d i": "debugger::StepInto",
             "space d o": "debugger::StepOut",
-            "ctrl-n": "debugger::StepOver",
+            "cmd-n": "debugger::StepOver",
             "space d r": "debugger::RerunLastSession"
         }
     },
@@ -52,10 +52,10 @@
             // put key-bindings here if you want them to work only in normal mode
             // Window movement bindings
             // Ctrl jklk to move between panes
-            "ctrl-h": "workspace::ActivatePaneLeft",
-            "ctrl-l": "workspace::ActivatePaneRight",
-            "ctrl-k": "workspace::ActivatePaneUp",
-            "ctrl-j": "workspace::ActivatePaneDown",
+            "cmd-h": "workspace::ActivatePaneLeft",
+            "cmd-l": "workspace::ActivatePaneRight",
+            "cmd-k": "workspace::ActivatePaneUp",
+            "cmd-j": "workspace::ActivatePaneDown",
 
             // +LSP
             "space c a": "editor::ToggleCodeActions",
@@ -92,12 +92,12 @@
             "tab": "pane::ActivateNextItem",
             // Close active panel
             "shift-q": "pane::CloseActiveItem",
-            "ctrl-q": "pane::CloseActiveItem",
+            "cmd-q": "pane::CloseActiveItem",
             "space b d": "pane::CloseActiveItem",
             // Close other items
             "space b o": "pane::CloseInactiveItems",
             // Save file
-            "ctrl-s": "workspace::Save",
+            "cmd-s": "workspace::Save",
             // File finder
             "space space": "file_finder::Toggle",
             // Project search
@@ -144,10 +144,10 @@
     {
         "context": "Terminal",
         "bindings": {
-            "ctrl-h": "workspace::ActivatePaneLeft",
-            "ctrl-l": "workspace::ActivatePaneRight",
-            "ctrl-k": "workspace::ActivatePaneUp",
-            "ctrl-j": "workspace::ActivatePaneDown"
+            "cmd-h": "workspace::ActivatePaneLeft",
+            "cmd-l": "workspace::ActivatePaneRight",
+            "cmd-k": "workspace::ActivatePaneUp",
+            "cmd-j": "workspace::ActivatePaneDown"
         }
     },
     // File panel (netrw)
@@ -166,10 +166,10 @@
             "space e": "workspace::ToggleLeftDock",
             "tab": "git_panel::ToggleFocus",
             // Navigate between panel
-            "ctrl-h": "workspace::ActivatePaneLeft",
-            "ctrl-l": "workspace::ActivatePaneRight",
-            "ctrl-k": "workspace::ActivatePaneUp",
-            "ctrl-j": "workspace::ActivatePaneDown"
+            "cmd-h": "workspace::ActivatePaneLeft",
+            "cmd-l": "workspace::ActivatePaneRight",
+            "cmd-k": "workspace::ActivatePaneUp",
+            "cmd-j": "workspace::ActivatePaneDown"
         }
     },
     {
@@ -182,10 +182,10 @@
     {
         "context": "Dock",
         "bindings": {
-            "ctrl-h": "workspace::ActivatePaneLeft",
-            "ctrl-l": "workspace::ActivatePaneRight",
-            "ctrl-k": "workspace::ActivatePaneUp",
-            "ctrl-j": "workspace::ActivatePaneDown"
+            "cmd-h": "workspace::ActivatePaneLeft",
+            "cmd-l": "workspace::ActivatePaneRight",
+            "cmd-k": "workspace::ActivatePaneUp",
+            "cmd-j": "workspace::ActivatePaneDown"
         }
     },
     {
@@ -207,8 +207,8 @@
             // "tab": "menu::SelectNext", // move to next item
             "tab": "menu::SelectNext", // move to next item
             "shift-tab": "menu::SelectPrevious", // move to previous item
-            "space a q": "workspace::ToggleRightDock",
-            "space d q": "workspace::ToggleBottomDock"
+            "space a t": "workspace::ToggleRightDock",
+            "space d t": "workspace::ToggleBottomDock"
         }
     },
     {
