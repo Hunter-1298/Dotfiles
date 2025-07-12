@@ -1,16 +1,27 @@
 theme = "nightfox"
-#theme = "zed_onedark"
+# theme = "light"
+# theme = "zed_onelight"
 [editor]
 line-number = "relative"
 cursorline = true
 bufferline = "multiple"
 end-of-line-diagnostics = "hint"
 true-color = true
+auto-completion = true
+path-completion = true
+auto-format = true
+preview-completion-insert = true
+popup-border = "all"
+auto-pairs = true
+jump-label-alphabet = "abcdefghijklmnopqrstuvwxyz"
 
 [editor.cursor-shape]
 insert = "bar"
 normal = "block"
 select = "underline"
+
+[editor.file-picker]
+hidden = false
 
 
 [editor.indent-guides]
@@ -18,13 +29,16 @@ character = "╎"
 render = true
 
 [editor.lsp]
+enable = true
 # Disable automatically popups of signature parameter help
 auto-signature-help = false
 # Show LSP messages in the status line
 display-messages = true
+display-inlay-hints = true
+snippets = true
 
 [editor.statusline]
-left = ["mode", "spinner", "version-control", "file-name"]
+left = [ "spinner", "version-control", "file-name"]
 
 [editor.inline-diagnostics]
 cursor-line = "error" # Show inline diagnostics when the cursor is on the line
@@ -33,8 +47,15 @@ other-lines = "disable" # Don't expand diagnostics unless the cursor is on the l
 [keys.normal]
 A-x = "extend_to_line_bounds"
 X = "select_line_above"
-"tab" = "goto_next_buffer"
-"S-tab" = "goto_previous_buffer"
+"C-tab" = "goto_next_buffer"
+"C-S-tab" = "goto_previous_buffer"
+"tab" = "goto_next_function" # Select and jump to the next function via Treesitter
+"S-tab" = "goto_prev_function" # Select and jump to the previous function via Treesitter 
+# Use system clipboard
+p = "paste_clipboard_before"
+y = "yank_main_selection_to_clipboard"
+"C-l" = "jump_view_right"
+"C-h" = "jump_view_left"
 
 [keys.select]
 A-x = "extend_to_line_bounds"
