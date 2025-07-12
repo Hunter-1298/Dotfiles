@@ -47,8 +47,6 @@ other-lines = "disable" # Don't expand diagnostics unless the cursor is on the l
 [keys.normal]
 A-x = "extend_to_line_bounds"
 X = "select_line_above"
-"C-tab" = "goto_next_buffer"
-"C-S-tab" = "goto_previous_buffer"
 "tab" = "goto_next_function" # Select and jump to the next function via Treesitter
 "S-tab" = "goto_prev_function" # Select and jump to the previous function via Treesitter 
 # Use system clipboard
