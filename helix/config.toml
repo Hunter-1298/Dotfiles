@@ -31,7 +31,7 @@ render = true
 [editor.lsp]
 enable = true
 # Disable automatically popups of signature parameter help
-auto-signature-help = false
+auto-signature-help = true
 # Show LSP messages in the status line
 display-messages = true
 display-inlay-hints = true
