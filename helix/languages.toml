@@ -10,5 +10,50 @@ args = ["server"]
 [language-server.pylyzer]
 command = "pylyzer"
 args = ["--server"]
+
+[[language]]
+name = "rust"
+auto-format = true
+
+roots = [
+  "Cargo.toml",
+  "Cargo.lock"
+]
+
+[language.auto-pairs]
+'(' = ')'
+'{' = '}'
+'[' = ']'
+'"' = '"'
+'`' = '`'
+
+[[language]]
+name = "rust"
+scope = "source.rust"
+injection-regex = "rs|rust"
+file-types = ["rs"]
+roots = ["Cargo.toml", "Cargo.lock"]
+shebangs = ["rust-script", "cargo"]
+auto-format = true
+comment-tokens = ["//", "///", "//!"]
+block-comment-tokens = [
+  { start = "/*", end = "*/" },
+  { start = "/**", end = "*/" },
+  { start = "/*!", end = "*/" },
+]
+language-servers = [ "rust-analyzer" ]
+indent = { tab-width = 4, unit = "    " }
+persistent-diagnostic-sources = ["rustc", "clippy"]
+
+[language-server.rust-analyzer]
+command = "rust-analyzer"
+
+[language-server.rust-analyzer.config]
+inlayHints.bindingModeHints.enable = false
+inlayHints.closingBraceHints.minLines = 10
+inlayHints.closureReturnTypeHints.enable = "with_block"
+inlayHints.discriminantHints.enable = "fieldless"
+inlayHints.lifetimeElisionHints.enable = "skip_trivial"
+inlayHints.typeHints.hideClosureInitialization = false
 [language-server.rust-analyzer.config.check]
 command = "clippy"

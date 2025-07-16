@@ -45,6 +45,7 @@ cursor-line = "error" # Show inline diagnostics when the cursor is on the line
 other-lines = "disable" # Don't expand diagnostics unless the cursor is on the line
 
 [keys.normal]
+C-g = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw"]
 A-x = "extend_to_line_bounds"
 X = "select_line_above"
 "tab" = "goto_next_function" # Select and jump to the next function via Treesitter
