@@ -1,5 +1,6 @@
-theme = "nightfox"
-# theme = "light"
+# theme = "focus_nova"
+theme = "rose_pine"
+# theme = "nightfox"
 # theme = "zed_onelight"
 [editor]
 line-number = "relative"
