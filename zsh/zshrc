@@ -131,9 +131,7 @@ alias vim=/usr/bin/nvim
 alias ls='eza --icons --color=always --show-symlinks'
 alias lart='eza -als=time --icons --color=always --show-symlinks'
 alias la='eza -al --icons --color=always --show-symlinks'
-alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
+alias grep=rg
 alias python3='python'
 cd() {
     builtin cd "$@" && ls
