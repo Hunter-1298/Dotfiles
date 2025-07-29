@@ -1,6 +1,5 @@
-# theme = "focus_nova"
-theme = "rose_pine"
-# theme = "nightfox"
+theme = "base16_transparent"
+# theme = "light"
 # theme = "zed_onelight"
 [editor]
 line-number = "relative"
@@ -55,6 +54,7 @@ X = "select_line_above"
 p = "paste_clipboard_before"
 y = "yank_main_selection_to_clipboard"
 "C-l" = "jump_view_right"
+# "C-" = "jump_forward"
 "C-h" = "jump_view_left"
 
 [keys.select]
