@@ -11,7 +11,7 @@ layout {
 
         pane split_direction="horizontal" size="25%" {
             pane {
-                command "ipython"
+               command "gemini"
             }
             pane {
                 // default terminal

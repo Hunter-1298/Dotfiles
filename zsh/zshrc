@@ -14,7 +14,8 @@ export HELIX_RUNTIME=~/helix/src/helix/runtime
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 alias code='cursor'
-alias zhx='zellij --layout $HOME/.config/zellij/layouts/helix.kdl'
+alias hxp='zellij --layout $HOME/.config/zellij/layouts/py.kdl'
+alias hxr='zellij --layout $HOME/.config/zellij/layouts/rs.kdl'
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.config/zsh/.oh-my-zsh"
 export ZSH_CUSTOM="$HOME/.config/zsh/.oh-my-zsh/custom"
