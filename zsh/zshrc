@@ -141,38 +141,12 @@ cd() {
     builtin cd "$@" && ls
 }
 
-# Cursor 
-export PATH="$PATH:/mnt/c/Users/Hayde/AppData/Local/Programs/cursor/resources/app/bin"
+autoload -Uz add-zsh-hook
 
-# >>> mamba initialize >>>
-# !! Contents within this block are managed by 'micromamba shell init' !!
-export MAMBA_EXE='/home/hshayde/.local/bin/micromamba';
-export MAMBA_ROOT_PREFIX='/home/hshayde/micromamba';
-__mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --root-prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__mamba_setup"
-else
-    alias micromamba="$MAMBA_EXE"  # Fallback on help from micromamba activate
-fi
-unset __mamba_setup
-# <<< mamba initialize <<<
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/hshayde/miniforge3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/home/hshayde/miniforge3/etc/profile.d/conda.sh" ]; then
-        . "/home/hshayde/miniforge3/etc/profile.d/conda.sh"
-    else
-        export PATH="/home/hshayde/miniforge3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-
-if [ -f "/home/hshayde/miniforge3/etc/profile.d/mamba.sh" ]; then
-    . "/home/hshayde/miniforge3/etc/profile.d/mamba.sh"
-fi
-# <<< conda initialize <<<
-
+function load_plugins_after_prompt() {
+  source $ZSH_CUSTOM/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+  source $ZSH_CUSTOM/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+  # Remove hook after loading once
+  add-zsh-hook -d precmd load_plugins_after_prompt
+}
+add-zsh-hook precmd load_plugins_after_prompt

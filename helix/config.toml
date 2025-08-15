@@ -1,4 +1,4 @@
-theme = "rose_pine_moon"
+theme = "test"
 # theme = "light"
 # theme = "zed_onelight"
 [editor]
@@ -51,7 +51,7 @@ X = "select_line_above"
 "tab" = "goto_next_function" # Select and jump to the next function via Treesitter
 "S-tab" = "goto_prev_function" # Select and jump to the previous function via Treesitter 
 # Use system clipboard
-p = "paste_clipboard_before"
+p = "paste_clipboard_after"
 y = "yank_main_selection_to_clipboard"
 "C-l" = "jump_view_right"
 # "C-" = "jump_forward"

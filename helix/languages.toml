@@ -57,3 +57,73 @@ inlayHints.lifetimeElisionHints.enable = "skip_trivial"
 inlayHints.typeHints.hideClosureInitialization = false
 [language-server.rust-analyzer.config.check]
 command = "clippy"
+
+
+# JavaScript
+[[language]]
+name = "javascript"
+language-servers = [
+  "typescript-language-server",
+  "vscode-eslint-language-server",
+  "tailwindcss-ls",
+  "emmet-ls"
+]
+auto-format = true
+formatter = { command = "npx", args = ["prettier", "--parser", "typescript"] }
+
+# TypeScript
+[[language]]
+name = "typescript"
+language-servers = [
+  "typescript-language-server",
+  "vscode-eslint-language-server",
+  "tailwindcss-ls",
+  "emmet-ls"
+]
+auto-format = true
+formatter = { command = "npx", args = ["prettier", "--parser", "typescript"] }
+
+# TSX
+[[language]]
+name = "tsx"
+language-servers = [
+  "typescript-language-server",
+  "vscode-eslint-language-server",
+  "tailwindcss-ls",
+  "emmet-ls"
+]
+auto-format = true
+formatter = { command = "npx", args = ["prettier", "--parser", "typescript"] }
+
+# JSX
+[[language]]
+name = "jsx"
+language-servers = [
+  "typescript-language-server",
+  "vscode-eslint-language-server",
+  "tailwindcss-ls",
+  "emmet-ls"
+]
+auto-format = true
+formatter = { command = "npx", args = ["prettier", "--parser", "typescript"] }
+
+# HTML
+[[language]]
+name = "html"
+language-servers = ["tailwindcss-language-server", "emmet-ls"]
+formatter = { command = "prettierd", args = [".html"] }
+auto-format = true
+
+# CSS
+[[language]]
+name = "css"
+language-servers = ["tailwindcss-language-server", "emmet-ls"]
+formatter = { command = "prettierd", args = [".css"] }
+auto-format = true
+
+# SCSS
+[[language]]
+name = "scss"
+language-servers = ["tailwindcss-language-server", "emmet-ls"]
+formatter = { command = "prettierd", args = [".scss"] }
+auto-format = true
