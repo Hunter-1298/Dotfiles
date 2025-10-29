@@ -5,7 +5,7 @@ return {
       'nvim-neotest/nvim-nio',
       'rcarriga/nvim-dap-ui',
       'mfussenegger/nvim-dap-python',
-      'theHamsta/nvim-dap-virtual-text',
+      -- 'theHamsta/nvim-dap-virtual-text',
     },
 
     keys = function(_, keys)
@@ -60,24 +60,27 @@ return {
         layouts = {
           {
             elements = {
-              'scopes',
+              { id = 'scopes', size = 0.7 },
+              { id = 'console', size = 0.3 },
             },
-            size = 0.3,
+            size = 60,
             position = 'left',
           },
           {
             elements = {
-              { id = 'repl', size = 0.7 },
-              { id = 'breakpoints', size = 0.3 },
+              { id = 'repl', size = 1 },
             },
-            size = 0.3,
+            size = 13,
             position = 'bottom',
           },
         },
       }
-      require('nvim-dap-virtual-text').setup {
-        commented = true, -- Show virtual text alongside comment
-      }
+      -- commenting out because of the long texts in machine learning
+      -- require('nvim-dap-virtual-text').setup {
+      --   commented = true, -- Show virtual text alongside comment
+      --   show_stop_reason = true,
+      --   clear_on_continue = true
+      -- }
 
       dap_python.setup 'python3'
 
@@ -107,9 +110,9 @@ return {
         dapui.open()
       end
       -- Automatically close DAP UI when the debugger stops
-      dap.listeners.after.event_terminated['dapui_config'] = function()
-        dapui.close()
-      end
+      -- dap.listeners.after.event_terminated['dapui_config'] = function()
+      --   dapui.close()
+      -- end
 
       local opts = { noremap = true, silent = true }
     end,

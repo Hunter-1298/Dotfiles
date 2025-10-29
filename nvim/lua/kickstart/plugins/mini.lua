@@ -26,6 +26,8 @@ return {
       }
       -- require('mini.starter').setup()
       require('mini.cursorword').setup()
+      require('mini.notify').setup()
+
       -- require('mini.statusline').setup()
       -- require('mini.indentscope').setup()
       -- require('mini.animate').setup()

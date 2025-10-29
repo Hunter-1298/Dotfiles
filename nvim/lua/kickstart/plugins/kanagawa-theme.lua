@@ -10,7 +10,7 @@ return {
     init = function()
       -- wave or dragon mode
       -- vim.cmd.colorscheme 'kanagawa-dragon'
-      -- vim.cmd.colorscheme 'kanagawa-wave'
+      vim.cmd.colorscheme 'kanagawa-wave'
 
       -- You can configure highlights by doing something like:
       vim.cmd 'hi Comment gui=none'

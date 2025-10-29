@@ -4,9 +4,9 @@ return {
     build = ':TSUpdate',
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter-context',
-    },
+    -- dependencies = {
+    --   'nvim-treesitter/nvim-treesitter-context',
+    -- },
     opts = {
       ensure_installed = {
         'bash',
