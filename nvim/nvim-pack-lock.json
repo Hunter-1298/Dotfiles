@@ -1,8 +1,81 @@
 {
   "plugins": {
+    "actions-preview.nvim": [],
     "blink.cmp": [],
+    "bufferline.nvim": {
+      "rev": "655133c3b4c3e5e05ec549b9f8cc2894ac6f51b3",
+      "src": "https://github.com/akinsho/bufferline.nvim"
+    },
+    "conform.nvim": {
+      "rev": "cde4da5c1083d3527776fee69536107d98dae6c9",
+      "src": "https://github.com/stevearc/conform.nvim"
+    },
+    "everforest": {
+      "rev": "484dd560dccb2d2842685c441ad2b54a54ffef1b",
+      "src": "https://github.com/sainnhe/everforest"
+    },
+    "fine-cmdline.nvim": {
+      "rev": "7db181d1cb294581b12a036eadffffde762a118f",
+      "src": "https://github.com/VonHeikemen/fine-cmdline.nvim"
+    },
+    "gruvbox.nvim": {
+      "rev": "5e0a460d8e0f7f669c158dedd5f9ae2bcac31437",
+      "src": "https://github.com/ellisonleao/gruvbox.nvim"
+    },
+    "iceberg.vim": {
+      "rev": "23835d5ed696436f716cbfdb56a93a7850fe3b18",
+      "src": "https://github.com/cocopon/iceberg.vim"
+    },
+    "kanagawa.nvim": {
+      "rev": "aef7f5cec0a40dbe7f3304214850c472e2264b10",
+      "src": "https://github.com/rebelot/kanagawa.nvim"
+    },
+    "lush.nvim": {
+      "rev": "9c60ec2279d62487d942ce095e49006af28eed6e",
+      "src": "https://github.com/rktjmp/lush.nvim"
+    },
+    "mason-lspconfig.nvim": [],
+    "mason-tool-installer.nvim": [],
+    "mason.nvim": [],
+    "mini.statusline": {
+      "rev": "14919901649d20d020e659c63c03baa75cd94f33",
+      "src": "https://github.com/nvim-mini/mini.statusline"
+    },
+    "noice.nvim": {
+      "rev": "7bfd942445fb63089b59f97ca487d605e715f155",
+      "src": "https://github.com/folke/noice.nvim"
+    },
+    "nui.nvim": {
+      "rev": "de740991c12411b663994b2860f1a4fd0937c130",
+      "src": "https://github.com/MunifTanjim/nui.nvim"
+    },
+    "nvim-lspconfig": [],
+    "nvim-notify": {
+      "rev": "8701bece920b38ea289b457f902e2ad184131a5d",
+      "src": "https://github.com/rcarriga/nvim-notify"
+    },
     "nvim-treesitter": {
       "version": "'main'"
+    },
+    "nvim-web-devicons": [],
+    "oil.nvim": [],
+    "oxocarbon.nvim": {
+      "rev": "9f85f6090322f39b11ae04a343d4eb9d12a86897",
+      "src": "https://github.com/nyoom-engineering/oxocarbon.nvim"
+    },
+    "plenary.nvim": [],
+    "telescope-ui-select.nvim": [],
+    "telescope.nvim": {
+      "rev": "3a12a853ebf21ec1cce9a92290e3013f8ae75f02"
+    },
+    "vim-one": {
+      "rev": "187f5c85b682c1933f8780d4d419c55d26a82e24",
+      "src": "https://github.com/rakr/vim-one"
+    },
+    "which-key.nvim": [],
+    "zenbones.nvim": {
+      "rev": "a934bc07d2ed4a98b74526c172d7f043736d8935",
+      "src": "https://github.com/zenbones-theme/zenbones.nvim"
     }
   }
 }
