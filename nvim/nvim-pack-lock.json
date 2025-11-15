@@ -1,0 +1,8 @@
+{
+  "plugins": {
+    "blink.cmp": [],
+    "nvim-treesitter": {
+      "version": "'main'"
+    }
+  }
+}
