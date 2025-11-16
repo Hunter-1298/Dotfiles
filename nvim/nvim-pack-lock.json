@@ -37,6 +37,10 @@
     "mason-lspconfig.nvim": [],
     "mason-tool-installer.nvim": [],
     "mason.nvim": [],
+    "mini.pairs": {
+      "rev": "b316e68f2d242d5bd010deaab645daa27ed86297",
+      "src": "https://github.com/nvim-mini/mini.pairs"
+    },
     "mini.statusline": {
       "rev": "14919901649d20d020e659c63c03baa75cd94f33",
       "src": "https://github.com/nvim-mini/mini.statusline"
@@ -67,6 +71,10 @@
     "telescope-ui-select.nvim": [],
     "telescope.nvim": {
       "rev": "3a12a853ebf21ec1cce9a92290e3013f8ae75f02"
+    },
+    "toggleterm.nvim": {
+      "rev": "9a88eae817ef395952e08650b3283726786fb5fb",
+      "src": "https://github.com/akinsho/toggleterm.nvim"
     },
     "vim-one": {
       "rev": "187f5c85b682c1933f8780d4d419c55d26a82e24",

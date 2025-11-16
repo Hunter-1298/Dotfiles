@@ -86,11 +86,15 @@ vim.pack.add({
 
 	-- statusline
 	"https://github.com/nvim-mini/mini.statusline",
+	"https://github.com/nvim-mini/mini.pairs",
 
 	-- noice -- command line only
 	"https://github.com/MunifTanjim/nui.nvim",
 	"https://github.com/rcarriga/nvim-notify",
 	"https://github.com/folke/noice.nvim",
+
+	-- bufferline
+	"https://github.com/akinsho/toggleterm.nvim",
 
 	-- oil (file buffer browser)
 	"https://github.com/stevearc/oil.nvim",
@@ -101,8 +105,17 @@ vim.cmd("colorscheme gruvbox")
 
 -- bufferline setup
 require("bufferline").setup({})
--- statusline setup
+-- toggleterm setup
+require("toggleterm").setup({
+	open_mapping = [[<C-t>]], -- works in both nvim and term
+	direction = "float",
+	shade_terminals = true,
+})
+
+-- mini [statusline and pairs setup]
 require("mini.statusline").setup({})
+require("mini.pairs").setup({})
+-- noice setup
 require("noice").setup({
 	cmdline = {
 		enabled = true, -- enables the Noice cmdline UI
@@ -143,7 +156,7 @@ require("blink.cmp").setup({
 		},
 	},
 	keymap = {
-		["<C-Tab>"] = { "select_prev", "fallback_to_mappings" },
+		["<S-Tab>"] = { "select_prev", "fallback_to_mappings" },
 		["<Tab>"] = { "select_next", "fallback_to_mappings" },
 		["<CR>"] = { "select_and_accept", "fallback" },
 	},
@@ -235,6 +248,7 @@ local lsp_servers = {
 
 	-- Rust
 	rust_analyzer = {},
+	codelldb = {},
 
 	-- Python (basedpyright)
 	basedpyright = {
@@ -266,7 +280,7 @@ require("mason").setup()
 require("mason-lspconfig").setup()
 
 -- Build an ensure_installed list containing formatters + LSP server names
-local ensure = { "black", "prettier", "rustfmt", "shfmt", "stylua" }
+local ensure = { "black", "prettier", "shfmt", "stylua" }
 -- merge in lsp server names
 for _, srv in ipairs(vim.tbl_keys(lsp_servers)) do
 	table.insert(ensure, srv)
