@@ -53,7 +53,7 @@ vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right win
 vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 vim.keymap.set("n", "<leader>vs", ":vsplit<CR>", { desc = "Split vertically" })
-vim.keymap.set("n", "<leader>vh", ":vsplit<CR>", { desc = "Split horizontally" })
+vim.keymap.set("n", "<leader>vh", ":split<CR>", { desc = "Split horizontally" })
 
 -- INFO: plugins (using vim.pack)
 vim.pack.add({
@@ -87,6 +87,7 @@ vim.pack.add({
 	-- statusline
 	"https://github.com/nvim-mini/mini.statusline",
 	"https://github.com/nvim-mini/mini.pairs",
+	"https://github.com/nvim-mini/mini.animate",
 
 	-- noice -- command line only
 	"https://github.com/MunifTanjim/nui.nvim",
@@ -115,6 +116,7 @@ require("toggleterm").setup({
 -- mini [statusline and pairs setup]
 require("mini.statusline").setup({})
 require("mini.pairs").setup({})
+require("mini.animate").setup({})
 -- noice setup
 require("noice").setup({
 	cmdline = {
@@ -189,6 +191,10 @@ telescope.setup({
 			prompt_position = "top",
 			preview_cutoff = 40,
 		},
+	},
+	refactor = {
+		highligh_definitions = { enable = true },
+		highligh_current_scope = { enable = false },
 	},
 })
 telescope.load_extension("ui-select")
@@ -296,7 +302,7 @@ for server, config in pairs(lsp_servers) do
 	vim.lsp.config(server, {
 		settings = config,
 
-		on_attach = function(_, bufnr)
+		on_attach = function(client, bufnr)
 			-- go to definition
 			vim.keymap.set("n", "gd", vim.lsp.buf.definition, {
 				buffer = bufnr,
@@ -312,10 +318,43 @@ for server, config in pairs(lsp_servers) do
 			vim.keymap.set("n", "<leader>lf", function()
 				require("conform").format({ async = true })
 			end, { buffer = bufnr, desc = "Format buffer (Conform)" })
+
+			-------------------------------------------------------------------
+			-- 🔥 Your Requested Highlight-On-Stop Logic (per-buffer)
+			-------------------------------------------------------------------
+			if client.server_capabilities.documentHighlightProvider then
+				local group = vim.api.nvim_create_augroup("LspReferenceHighlight_" .. bufnr, { clear = true })
+
+				-- Highlight references when cursor moves (not in insert mode)
+				vim.api.nvim_create_autocmd("CursorMoved", {
+					group = group,
+					buffer = bufnr,
+					desc = "Highlight references under cursor",
+					callback = function()
+						if vim.fn.mode() ~= "i" then
+							vim.lsp.buf.clear_references()
+							vim.lsp.buf.document_highlight()
+						end
+					end,
+				})
+
+				-- Clear highlights in insert mode
+				vim.api.nvim_create_autocmd("CursorMovedI", {
+					group = group,
+					buffer = bufnr,
+					desc = "Clear references on insert movement",
+					callback = function()
+						vim.lsp.buf.clear_references()
+					end,
+				})
+			end
+			-------------------------------------------------------------------
 		end,
 	})
 end
-
+vim.api.nvim_set_hl(0, "LspReferenceText", { link = "Visual" })
+vim.api.nvim_set_hl(0, "LspReferenceRead", { link = "Visual" })
+vim.api.nvim_set_hl(0, "LspReferenceWrite", { link = "Visual" })
 -- Conform.nvim setup (formatters + format-on-save)
 require("conform").setup({
 	-- try Conform formatters first; if none available, allow LSP fallback
@@ -362,6 +401,10 @@ require("conform").setup({
 		},
 	},
 })
+vim.keymap.set("n", "<leader>h", function()
+	local enabled = vim.lsp.inlay_hint.is_enabled()
+	vim.lsp.inlay_hint.enable(not enabled)
+end, { desc = "Toggle Inlay Hints" })
 
 -- uncomment to enable automatic plugin updates
 -- vim.pack.update()
