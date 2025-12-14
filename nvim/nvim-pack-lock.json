@@ -1,7 +1,22 @@
 {
   "plugins": {
-    "actions-preview.nvim": [],
-    "blink.cmp": [],
+    "actions-preview.nvim": {
+      "rev": "cb938c25edaac38d362555f19244a9cb85d561e8",
+      "src": "https://github.com/aznhe21/actions-preview.nvim"
+    },
+    "aura-theme": {
+      "rev": "6356de2fa2551b9dbc3a7d7b6c5328658353084e",
+      "src": "https://github.com/daltonmenezes/aura-theme"
+    },
+    "bamboo.nvim": {
+      "rev": "1309bc88bffcf1bedc3e84e7fa9004de93da774a",
+      "src": "https://github.com/ribru17/bamboo.nvim"
+    },
+    "blink.cmp": {
+      "rev": "73ea297bc665c936b51797d5a55599536ffee0d8",
+      "src": "https://github.com/saghen/blink.cmp",
+      "version": "'1.*'"
+    },
     "bufferline.nvim": {
       "rev": "655133c3b4c3e5e05ec549b9f8cc2894ac6f51b3",
       "src": "https://github.com/akinsho/bufferline.nvim"
@@ -38,9 +53,18 @@
       "rev": "9c60ec2279d62487d942ce095e49006af28eed6e",
       "src": "https://github.com/rktjmp/lush.nvim"
     },
-    "mason-lspconfig.nvim": [],
-    "mason-tool-installer.nvim": [],
-    "mason.nvim": [],
+    "mason-lspconfig.nvim": {
+      "rev": "7d527c76c43f46294de9c19d39c5a86317809b4b",
+      "src": "https://github.com/mason-org/mason-lspconfig.nvim"
+    },
+    "mason-tool-installer.nvim": {
+      "rev": "517ef5994ef9d6b738322664d5fdd948f0fdeb46",
+      "src": "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim"
+    },
+    "mason.nvim": {
+      "rev": "57e5a8addb8c71fb063ee4acda466c7cf6ad2800",
+      "src": "https://github.com/mason-org/mason.nvim"
+    },
     "mini.animate": {
       "rev": "0365de8b69331c25d0d0d7573407a7dc7719e578",
       "src": "https://github.com/nvim-mini/mini.animate"
@@ -61,34 +85,63 @@
       "rev": "de740991c12411b663994b2860f1a4fd0937c130",
       "src": "https://github.com/MunifTanjim/nui.nvim"
     },
-    "nvim-lspconfig": [],
+    "nvim-lspconfig": {
+      "rev": "e0fae251f8459940331960106d4bd9457cec23de",
+      "src": "https://github.com/neovim/nvim-lspconfig"
+    },
     "nvim-notify": {
       "rev": "8701bece920b38ea289b457f902e2ad184131a5d",
       "src": "https://github.com/rcarriga/nvim-notify"
     },
     "nvim-treesitter": {
+      "rev": "bb83a676128d95c865e40ba71376d883bdadec14",
+      "src": "https://github.com/nvim-treesitter/nvim-treesitter",
       "version": "'main'"
     },
-    "nvim-web-devicons": [],
-    "oil.nvim": [],
+    "nvim-web-devicons": {
+      "rev": "8dcb311b0c92d460fac00eac706abd43d94d68af",
+      "src": "https://github.com/nvim-tree/nvim-web-devicons"
+    },
+    "oil.nvim": {
+      "rev": "7e1cd7703ff2924d7038476dcbc04b950203b902",
+      "src": "https://github.com/stevearc/oil.nvim"
+    },
     "oxocarbon.nvim": {
       "rev": "9f85f6090322f39b11ae04a343d4eb9d12a86897",
       "src": "https://github.com/nyoom-engineering/oxocarbon.nvim"
     },
-    "plenary.nvim": [],
-    "telescope-ui-select.nvim": [],
+    "plenary.nvim": {
+      "rev": "b9fd5226c2f76c951fc8ed5923d85e4de065e509",
+      "src": "https://github.com/nvim-lua/plenary.nvim"
+    },
+    "telescope-ui-select.nvim": {
+      "rev": "6e51d7da30bd139a6950adf2a47fda6df9fa06d2",
+      "src": "https://github.com/nvim-telescope/telescope-ui-select.nvim"
+    },
     "telescope.nvim": {
-      "rev": "3a12a853ebf21ec1cce9a92290e3013f8ae75f02"
+      "rev": "83a3a713d6b2d2a408491a1b959e55a7fa8678e8",
+      "src": "https://github.com/nvim-telescope/telescope.nvim"
     },
     "toggleterm.nvim": {
       "rev": "9a88eae817ef395952e08650b3283726786fb5fb",
       "src": "https://github.com/akinsho/toggleterm.nvim"
     },
+    "vague.nvim": {
+      "rev": "dba28050887c2810b5ebf9e0143b4e919bd55757",
+      "src": "https://github.com/vague-theme/vague.nvim"
+    },
+    "vim-moonfly-colors": {
+      "rev": "930f33f2e91225afb0491d259cf151ea9eca6ca3",
+      "src": "https://github.com/bluz71/vim-moonfly-colors"
+    },
     "vim-one": {
       "rev": "187f5c85b682c1933f8780d4d419c55d26a82e24",
       "src": "https://github.com/rakr/vim-one"
     },
-    "which-key.nvim": [],
+    "which-key.nvim": {
+      "rev": "3aab2147e74890957785941f0c1ad87d0a44c15a",
+      "src": "https://github.com/folke/which-key.nvim"
+    },
     "zenbones.nvim": {
       "rev": "a934bc07d2ed4a98b74526c172d7f043736d8935",
       "src": "https://github.com/zenbones-theme/zenbones.nvim"

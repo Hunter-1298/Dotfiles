@@ -41,8 +41,41 @@ vim.diagnostic.config({
 			[vim.diagnostic.severity.HINT] = " ",
 		},
 	},
-	virtual_text = true,
+	-- Inline diagnostics
+	virtual_text = {
+		prefix = "●",
+		spacing = 2,
+		source = "if_many",
+	},
+
+	underline = true,
+	severity_sort = true,
+
+	-- Don't update while typing
+	update_in_insert = false,
+
+	-- Floating diagnostics window
+	float = {
+		border = "rounded",
+		header = "",
+		prefix = "",
+	},
 })
+
+-- Faster hover diagnostics
+vim.o.updatetime = 250
+
+-- Auto-show diagnostics on hover
+vim.api.nvim_create_autocmd("CursorHold", {
+	callback = function()
+		vim.diagnostic.open_float(nil, { focus = false })
+	end,
+})
+
+-- Project-wide diagnostics (built-in)
+vim.keymap.set("n", "<leader>d", function()
+	vim.diagnostic.setqflist({ open = true })
+end, { desc = "All diagnostics (Quickfix)" })
 
 -- keymaps
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
@@ -58,9 +91,10 @@ vim.keymap.set("n", "<leader>vh", ":split<CR>", { desc = "Split horizontally" })
 -- INFO: plugins (using vim.pack)
 vim.pack.add({
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
-	{ src = "https://github.com/saghen/blink.cmp" },
+	{ src = "https://github.com/saghen/blink.cmp", version = "1.*" },
 	{ src = "https://github.com/rktjmp/lush.nvim" },
 	{ src = "https://github.com/ellisonleao/gruvbox.nvim" },
+	{ src = "https://github.com/ribru17/bamboo.nvim" },
 
 	-- core LSP and mason toolkit
 	"https://github.com/neovim/nvim-lspconfig",
@@ -102,7 +136,7 @@ vim.pack.add({
 }, { confirm = false })
 
 -- colorscheme
-vim.cmd("colorscheme gruvbox")
+vim.cmd("colorscheme bamboo")
 
 -- bufferline setup
 require("bufferline").setup({})
@@ -253,7 +287,13 @@ local lsp_servers = {
 	clangd = {},
 
 	-- Rust
-	rust_analyzer = {},
+	rust_analyzer = {
+		["rust-analyzer"] = {
+			checkOnSave = {
+				command = "clippy",
+			},
+		},
+	},
 	codelldb = {},
 
 	-- Python (basedpyright)
