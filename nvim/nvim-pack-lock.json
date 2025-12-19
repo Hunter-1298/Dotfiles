@@ -6,6 +6,8 @@
       "src": "https://github.com/ribru17/bamboo.nvim"
     },
     "blink.cmp": {
+      "rev": "b19413d214068f316c78978b08264ed1c41830ec",
+      "src": "https://github.com/saghen/blink.cmp",
       "version": "'1.*'"
     },
     "bufferline.nvim": {

@@ -92,6 +92,7 @@ vim.keymap.set("n", "<leader>vh", ":split<CR>", { desc = "Split horizontally" })
 vim.pack.add({
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
 	{ src = "https://github.com/saghen/blink.cmp", version = "1.*" },
+	-- { src = "https://github.com/saghen/blink.cmp", version = "v1.8.0" },
 	{ src = "https://github.com/rktjmp/lush.nvim" },
 	{ src = "https://github.com/ellisonleao/gruvbox.nvim" },
 	{ src = "https://github.com/ribru17/bamboo.nvim" },
@@ -124,7 +125,10 @@ vim.pack.add({
 	"https://github.com/nvim-mini/mini.statusline",
 	"https://github.com/nvim-mini/mini.pairs",
 	"https://github.com/nvim-mini/mini.animate",
+	"https://github.com/nvim-mini/mini.indentscope",
 
+	-- indent blankline
+	"https://github.com/lukas-reineke/indent-blankline.nvim",
 	-- noice -- command line only
 	"https://github.com/MunifTanjim/nui.nvim",
 	"https://github.com/rcarriga/nvim-notify",
@@ -186,6 +190,19 @@ vim.api.nvim_set_keymap("t", "<C-l>", "<C-\\><C-n><C-w>l", { noremap = true, sil
 require("mini.statusline").setup({})
 require("mini.pairs").setup({})
 require("mini.animate").setup({})
+require("mini.indentscope").setup({
+	symbol = "›", -- character for the indent line
+	options = {
+		try_as_border = true, -- optional, makes active scope look nicer
+	},
+})
+
+-- Set hot pink color for indent lines
+vim.api.nvim_set_hl(0, "MiniIndentscopeSymbol", { fg = "#FF69B4" })
+
+-- Optional: highlight the active scope with background
+vim.api.nvim_set_hl(0, "MiniIndentscopeActive", { bg = "#2c313a" })
+
 -- noice setup
 require("noice").setup({
 	cmdline = {
