@@ -95,6 +95,8 @@ vim.pack.add({
 	{ src = "https://github.com/rktjmp/lush.nvim" },
 	{ src = "https://github.com/ellisonleao/gruvbox.nvim" },
 	{ src = "https://github.com/ribru17/bamboo.nvim" },
+	{ src = "https://github.com/folke/tokyonight.nvim" },
+	{ src = "https://github.com/scottmckendry/cyberdream.nvim" },
 
 	-- core LSP and mason toolkit
 	"https://github.com/neovim/nvim-lspconfig",
@@ -136,16 +138,49 @@ vim.pack.add({
 }, { confirm = false })
 
 -- colorscheme
-vim.cmd("colorscheme bamboo")
+-- vim.cmd("colorscheme bamboo")
+require("cyberdream").setup({ transparent = true })
+vim.cmd("colorscheme cyberdream")
 
 -- bufferline setup
 require("bufferline").setup({})
--- toggleterm setup
+
+-- ToggleTerm setup: horizontal terminal only
 require("toggleterm").setup({
-	open_mapping = [[<C-t>]], -- works in both nvim and term
-	direction = "float",
-	shade_terminals = true,
+	size = function(term)
+		if term.direction == "horizontal" then
+			return 15 -- height of horizontal terminal in lines
+		end
+	end,
+	direction = "horizontal", -- always horizontal
+	start_in_insert = true, -- start terminal in insert mode
+	close_on_exit = true, -- close terminal when process exits
+	shade_terminals = true, -- darken terminal background
+	persist_size = true, -- remember size
+	persist_mode = true, -- remember insert/normal mode
+	auto_scroll = true, -- scroll to bottom automatically
+	terminal_mappings = true, -- mappings inside terminal
+	hide_numbers = true, -- hide line numbers in terminal
 })
+
+-- Create a terminal object for manual toggle
+local Terminal = require("toggleterm.terminal").Terminal
+local horizontal_term = Terminal:new({ direction = "horizontal", size = 15 })
+
+-- Map <leader>t to toggle the horizontal terminal
+vim.keymap.set("n", "<leader>t", function()
+	horizontal_term:toggle()
+	-- Ensure insert mode every toggle
+end, { noremap = true, silent = true })
+
+-- Map Esc in terminal to go back to normal mode
+vim.api.nvim_set_keymap("t", "<Esc>", "<C-\\><C-n>", { noremap = true, silent = true })
+
+-- Terminal split navigation shortcuts
+vim.api.nvim_set_keymap("t", "<C-h>", "<C-\\><C-n><C-w>h", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("t", "<C-j>", "<C-\\><C-n><C-w>j", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("t", "<C-k>", "<C-\\><C-n><C-w>k", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("t", "<C-l>", "<C-\\><C-n><C-w>l", { noremap = true, silent = true })
 
 -- mini [statusline and pairs setup]
 require("mini.statusline").setup({})
