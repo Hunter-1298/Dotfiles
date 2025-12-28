@@ -108,6 +108,9 @@ vim.pack.add({
 	-- formatting: conform.nvim
 	"https://github.com/stevearc/conform.nvim",
 
+	-- tmux splits
+	"https://github.com/christoomey/vim-tmux-navigator",
+
 	-- fuzzy finder ecosystem
 	"https://github.com/nvim-lua/plenary.nvim",
 	"https://github.com/nvim-tree/nvim-web-devicons",
@@ -319,10 +322,24 @@ require("oil").setup({
 	},
 	keymaps = {
 		["<leader>e"] = "actions.close",
+		["v"] = {
+			callback = function()
+				-- require("oil").select() is the internal action for picking a file
+				-- We pass the options you found in the documentation here
+				require("oil").select({ vertical = true })
+			end,
+			desc = "Open the entry under cursor in a vertical split",
+		},
+	},
+	open = {
+		-- Always open files in vertical split by default
+		vertical = true,
 	},
 })
 vim.keymap.set("n", "<leader>e", "<CMD>Oil --float --preview<CR>", { desc = "File navigation" })
 vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent dir" })
+-- Custom mapping for opening files in vertical split using Oil
+-- Create a custom keybinding for vertical split in Oil
 -- INFO: lsp server installation and configuration
 local lsp_servers = {
 	-- Lua
