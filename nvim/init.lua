@@ -323,7 +323,6 @@ require("oil").setup({
 })
 vim.keymap.set("n", "<leader>e", "<CMD>Oil --float --preview<CR>", { desc = "File navigation" })
 vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent dir" })
-
 -- INFO: lsp server installation and configuration
 local lsp_servers = {
 	-- Lua
