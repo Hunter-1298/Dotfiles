@@ -92,7 +92,6 @@ vim.keymap.set("n", "<leader>vh", ":split<CR>", { desc = "Split horizontally" })
 vim.pack.add({
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
 	{ src = "https://github.com/saghen/blink.cmp", version = "1.*" },
-	-- { src = "https://github.com/saghen/blink.cmp", version = "v1.8.0" },
 	{ src = "https://github.com/rktjmp/lush.nvim" },
 	{ src = "https://github.com/ellisonleao/gruvbox.nvim" },
 	{ src = "https://github.com/ribru17/bamboo.nvim" },
@@ -140,15 +139,113 @@ vim.pack.add({
 	-- bufferline
 	"https://github.com/akinsho/toggleterm.nvim",
 
+	-- CodeCompanion
+	"https://github.com/olimorris/codecompanion.nvim",
+
 	-- oil (file buffer browser)
 	"https://github.com/stevearc/oil.nvim",
 }, { confirm = false })
 
 -- colorscheme
 -- vim.cmd("colorscheme bamboo")
-require("cyberdream").setup({ transparent = true })
-vim.cmd("colorscheme cyberdream")
+-- require("cyberdream").setup({ transparent = true })
+vim.cmd("colorscheme bamboo")
 
+-- CodeCompanion Setup
+require("codecompanion").setup({
+	dependencies = {
+		{ "nvim-lua/plenary.nvim" },
+		{
+			"nvim-treesitter/nvim-treesitter",
+			lazy = false,
+			build = ":TSUpdate",
+		},
+		{
+			"saghen/blink.cmp",
+			lazy = false,
+			version = "*",
+			opts = {
+				keymap = {
+					preset = "enter",
+					["<S-Tab>"] = { "select_prev", "fallback" },
+					["<Tab>"] = { "select_next", "fallback" },
+				},
+				cmdline = { sources = { "cmdline" } },
+				sources = {
+					default = { "lsp", "path", "buffer", "codecompanion" },
+				},
+			},
+		},
+	},
+
+	interactions = {
+		chat = {
+			adapter = {
+				name = "gemini",
+				model = "gemini-2.5-flash",
+			},
+			slash_commands = {
+				["file"] = {
+					-- Use Telescope as the provider for the /file command
+					opts = {
+						provider = "telescope", -- "default", "telescope", "fzf_lua", "mini_pick", or "snacks"
+					},
+				},
+			},
+		},
+
+		inline = {
+			adapter = {
+				name = "gemini",
+				model = "gemini-2.5-flash",
+			},
+			keymaps = {
+				accept_change = {
+					modes = { n = "ca" },
+				},
+				reject_change = {
+					modes = { n = "cr" },
+				},
+				always_accept = {
+					modes = { n = "cA" },
+				},
+			},
+		},
+
+		cmd = {
+			adapter = {
+				name = "gemini",
+				model = "gemini-2.5-flash",
+			},
+		},
+
+		background = {
+			adapter = {
+				name = "gemini",
+				model = "gemini-2.5-flash",
+			},
+		},
+	},
+})
+
+vim.keymap.set(
+	{ "n", "v" },
+	"<LocalLeader>ct",
+	"<cmd>CodeCompanionChat Toggle<cr>",
+	{ noremap = true, silent = true, desc = "[C]hat [T]oggle" }
+)
+vim.keymap.set(
+	"v",
+	"<LocalLeader>ca",
+	"<cmd>CodeCompanionChat Add<cr>",
+	{ noremap = true, silent = true, desc = "[C]hat [A]dd" }
+)
+vim.keymap.set(
+	"v",
+	"<LocalLeader>ci",
+	"<cmd>CodeCompanion<cr>",
+	{ noremap = true, silent = true, desc = "[C]hat [I]nline" }
+)
 -- bufferline setup
 require("bufferline").setup({})
 
@@ -237,6 +334,18 @@ require("noice").setup({
 		long_message_to_split = false, -- long messages will be sent to a split
 		inc_rename = false, -- enables an input dialog for inc-rename.nvim
 		lsp_doc_border = true, -- add a border to hover docs and signature help
+	},
+	routes = {
+		{
+			filter = {
+				-- This covers both standard messages and plugin notifications
+				any = {
+					{ event = "msg_show", find = "Missing frontmatter, name or interaction" },
+					{ event = "notify", find = "Missing frontmatter, name or interaction" },
+				},
+			},
+			opts = { skip = true },
+		},
 	},
 })
 -- blink.cmp setup
