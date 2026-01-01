@@ -87,7 +87,10 @@ vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower win
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 vim.keymap.set("n", "<leader>vs", ":vsplit<CR>", { desc = "Split vertically" })
 vim.keymap.set("n", "<leader>vh", ":split<CR>", { desc = "Split horizontally" })
-
+vim.keymap.set("n", "<M-k>", ":resize +4<CR>", { silent = true })
+vim.keymap.set("n", "<M-j>", ":resize -4<CR>", { silent = true })
+vim.keymap.set("n", "<M-h>", ":vertical resize -4<CR>", { silent = true })
+vim.keymap.set("n", "<M-l>", ":vertical resize +4<CR>", { silent = true })
 -- INFO: plugins (using vim.pack)
 vim.pack.add({
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
@@ -97,6 +100,7 @@ vim.pack.add({
 	{ src = "https://github.com/ribru17/bamboo.nvim" },
 	{ src = "https://github.com/folke/tokyonight.nvim" },
 	{ src = "https://github.com/scottmckendry/cyberdream.nvim" },
+	{ src = "https://github.com/EdenEast/nightfox.nvim" },
 
 	-- core LSP and mason toolkit
 	"https://github.com/neovim/nvim-lspconfig",
@@ -149,10 +153,19 @@ vim.pack.add({
 -- colorscheme
 -- vim.cmd("colorscheme bamboo")
 -- require("cyberdream").setup({ transparent = true })
-vim.cmd("colorscheme bamboo")
+vim.cmd("colorscheme carbonfox")
 
 -- CodeCompanion Setup
 require("codecompanion").setup({
+	display = {
+		chat = {
+			window = {
+				layout = "vertical", -- Options: "vertical", "horizontal", "float", "buffer"
+				position = "left", -- Can be "left" or "right"
+				width = 75, -- Fixed width of 45 columns
+			},
+		},
+	},
 	dependencies = {
 		{ "nvim-lua/plenary.nvim" },
 		{
