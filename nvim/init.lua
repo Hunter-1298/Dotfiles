@@ -63,7 +63,7 @@ vim.diagnostic.config({
 })
 
 -- Faster hover diagnostics
-vim.o.updatetime = 250
+vim.o.updatetime = 200
 
 -- Auto-show diagnostics on hover
 vim.api.nvim_create_autocmd("CursorHold", {
@@ -87,10 +87,10 @@ vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower win
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 vim.keymap.set("n", "<leader>vs", ":vsplit<CR>", { desc = "Split vertically" })
 vim.keymap.set("n", "<leader>vh", ":split<CR>", { desc = "Split horizontally" })
-vim.keymap.set("n", "<M-k>", ":resize +4<CR>", { silent = true })
-vim.keymap.set("n", "<M-j>", ":resize -4<CR>", { silent = true })
-vim.keymap.set("n", "<M-h>", ":vertical resize -4<CR>", { silent = true })
-vim.keymap.set("n", "<M-l>", ":vertical resize +4<CR>", { silent = true })
+vim.keymap.set("n", "<M-k>", ":resize +8<CR>", { silent = true })
+vim.keymap.set("n", "<M-j>", ":resize -8<CR>", { silent = true })
+vim.keymap.set("n", "<M-h>", ":vertical resize -8<CR>", { silent = true })
+vim.keymap.set("n", "<M-l>", ":vertical resize +8<CR>", { silent = true })
 -- INFO: plugins (using vim.pack)
 vim.pack.add({
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
@@ -113,6 +113,9 @@ vim.pack.add({
 
 	-- tmux splits
 	"https://github.com/christoomey/vim-tmux-navigator",
+
+	-- flash
+	"https://github.com/folke/flash.nvim",
 
 	-- fuzzy finder ecosystem
 	"https://github.com/nvim-lua/plenary.nvim",
@@ -154,6 +157,11 @@ vim.pack.add({
 -- vim.cmd("colorscheme bamboo")
 -- require("cyberdream").setup({ transparent = true })
 vim.cmd("colorscheme carbonfox")
+vim.api.nvim_create_autocmd("FileType", {
+	callback = function()
+		pcall(vim.treesitter.start)
+	end,
+})
 
 -- CodeCompanion Setup
 require("codecompanion").setup({
@@ -261,6 +269,14 @@ vim.keymap.set(
 )
 -- bufferline setup
 require("bufferline").setup({})
+
+require("flash").setup({})
+
+local flash = require("flash")
+
+vim.keymap.set({ "n", "x", "o" }, "s", flash.jump, { desc = "Flash" })
+vim.keymap.set({ "n", "x", "o" }, "S", flash.treesitter, { desc = "Flash Treesitter" })
+vim.keymap.set({ "o", "x" }, "R", flash.treesitter_search, { desc = "Treesitter Search" })
 
 -- ToggleTerm setup: horizontal terminal only
 require("toggleterm").setup({
