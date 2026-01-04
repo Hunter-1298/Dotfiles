@@ -21,6 +21,14 @@
       "rev": "655133c3b4c3e5e05ec549b9f8cc2894ac6f51b3",
       "src": "https://github.com/akinsho/bufferline.nvim"
     },
+    "centerpad.nvim": {
+      "rev": "666641d02fd8c58ac401c1fb6bf596bb00b815fb",
+      "src": "https://github.com/smithbm2316/centerpad.nvim"
+    },
+    "codecompanion.nvim": {
+      "rev": "e39831eb745ebf1e0edcda25431c3255560729d4",
+      "src": "https://github.com/olimorris/codecompanion.nvim"
+    },
     "conform.nvim": {
       "rev": "cde4da5c1083d3527776fee69536107d98dae6c9",
       "src": "https://github.com/stevearc/conform.nvim"
@@ -89,6 +97,10 @@
       "rev": "14919901649d20d020e659c63c03baa75cd94f33",
       "src": "https://github.com/nvim-mini/mini.statusline"
     },
+    "nightfox.nvim": {
+      "rev": "ba47d4b4c5ec308718641ba7402c143836f35aa9",
+      "src": "https://github.com/EdenEast/nightfox.nvim"
+    },
     "noice.nvim": {
       "rev": "7bfd942445fb63089b59f97ca487d605e715f155",
       "src": "https://github.com/folke/noice.nvim"
@@ -109,6 +121,10 @@
       "rev": "bb83a676128d95c865e40ba71376d883bdadec14",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter",
       "version": "'main'"
+    },
+    "nvim-treesitter-textobjects": {
+      "rev": "5ca4aaa6efdcc59be46b95a3e876300cfead05ef",
+      "src": "https://github.com/nvim-treesitter/nvim-treesitter-textobjects"
     },
     "nvim-web-devicons": {
       "rev": "8dcb311b0c92d460fac00eac706abd43d94d68af",
@@ -161,6 +177,10 @@
     "which-key.nvim": {
       "rev": "3aab2147e74890957785941f0c1ad87d0a44c15a",
       "src": "https://github.com/folke/which-key.nvim"
+    },
+    "zen-mode.nvim": {
+      "rev": "8564ce6d29ec7554eb9df578efa882d33b3c23a7",
+      "src": "https://github.com/folke/zen-mode.nvim"
     },
     "zenbones.nvim": {
       "rev": "a934bc07d2ed4a98b74526c172d7f043736d8935",

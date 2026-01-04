@@ -7,7 +7,6 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.opt.winborder = "rounded"
-
 -- ui / editor options
 vim.opt.termguicolors = true
 vim.opt.number = true
@@ -25,6 +24,7 @@ vim.opt.hlsearch = true
 vim.opt.breakindent = true
 vim.opt.wrap = true
 vim.opt.fileformats = { "unix", "dos" }
+vim.cmd([[autocmd FileType * set formatoptions-=ro]])
 
 -- formatting style
 vim.opt.tabstop = 2
