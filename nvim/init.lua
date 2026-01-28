@@ -63,14 +63,14 @@ vim.diagnostic.config({
 })
 
 -- Faster hover diagnostics
-vim.o.updatetime = 200
+vim.o.updatetime = 100
 
 -- Auto-show diagnostics on hover
-vim.api.nvim_create_autocmd("CursorHold", {
-	callback = function()
-		vim.diagnostic.open_float(nil, { focus = false })
-	end,
-})
+-- vim.api.nvim_create_autocmd("CursorHold", {
+-- 	callback = function()
+-- 		vim.diagnostic.open_float(nil, { focus = false })
+-- 	end,
+-- })
 
 -- Project-wide diagnostics (built-in)
 vim.keymap.set("n", "<leader>d", function()
@@ -143,11 +143,14 @@ vim.pack.add({
 	"https://github.com/rcarriga/nvim-notify",
 	"https://github.com/folke/noice.nvim",
 
-	-- bufferline
+	-- toggleterm
 	"https://github.com/akinsho/toggleterm.nvim",
 
 	-- CodeCompanion
 	"https://github.com/olimorris/codecompanion.nvim",
+
+	-- center buffer
+	"https://github.com/folke/zen-mode.nvim",
 
 	-- oil (file buffer browser)
 	"https://github.com/stevearc/oil.nvim",
@@ -156,13 +159,20 @@ vim.pack.add({
 -- colorscheme
 -- vim.cmd("colorscheme bamboo")
 -- require("cyberdream").setup({ transparent = true })
-vim.cmd("colorscheme carbonfox")
+vim.cmd("colorscheme nightfox")
 vim.api.nvim_create_autocmd("FileType", {
 	callback = function()
 		pcall(vim.treesitter.start)
 	end,
 })
 
+-- set zenmode
+vim.keymap.set(
+	{ "n", "v" },
+	"<LocalLeader>z",
+	"<cmd>ZenMode<cr>",
+	{ noremap = true, silent = true, desc = "[C]hat [T]oggle" }
+)
 -- CodeCompanion Setup
 require("codecompanion").setup({
 	display = {
@@ -334,18 +344,31 @@ vim.api.nvim_set_hl(0, "MiniIndentscopeActive", { bg = "#2c313a" })
 
 -- noice setup
 require("noice").setup({
+	lsp = {
+		-- This is the specific fix for the "print()" wall of text
+		signature = {
+			enabled = true,
+			auto_open = {
+				enabled = false, -- !!! SET TO FALSE TO STOP THE AUTO POPUPS !!!
+				trigger = true, -- Allows manual trigger via keymap or C-k
+			},
+		},
+		hover = {
+			enabled = true,
+			silent = true, -- Stops noice from complaining if hover has no info
+		},
+	},
 	cmdline = {
-		enabled = true, -- enables the Noice cmdline UI
-		view = "cmdline_popup", -- view for rendering the cmdline. Change to `cmdline` to get a classic cmdline at the bottom
-		opts = {}, -- global options for the cmdline. See section on views
-		---@type table<string, CmdlineFormat>
+		enabled = true,
+		view = "cmdline_popup",
+		opts = {},
 		format = {
 			cmdline = { pattern = "^:", icon = "", lang = "vim" },
 			search_down = { kind = "search", pattern = "^/", icon = " ", lang = "regex" },
 			search_up = { kind = "search", pattern = "^%?", icon = " ", lang = "regex" },
 			lua = { pattern = { "^:%s*lua%s+", "^:%s*lua%s*=%s*", "^:%s*=%s*" }, icon = "", lang = "lua" },
 			help = { pattern = "^:%s*he?l?p?%s+", icon = "" },
-			input = {}, -- Used by input()
+			input = {},
 		},
 	},
 	messages = {
@@ -354,20 +377,18 @@ require("noice").setup({
 	popupmenu = {
 		enabled = true,
 	},
-	signature = {
-		enabled = true,
-	},
+	-- Note: Removed the standalone signature = { enabled = true }
+	-- as it is now handled inside the lsp block above.
 	presets = {
-		bottom_search = false, -- use a classic bottom cmdline for search
-		command_palette = false, -- position the cmdline and popupmenu together
-		long_message_to_split = false, -- long messages will be sent to a split
-		inc_rename = false, -- enables an input dialog for inc-rename.nvim
-		lsp_doc_border = true, -- add a border to hover docs and signature help
+		bottom_search = false,
+		command_palette = false,
+		long_message_to_split = false,
+		inc_rename = false,
+		lsp_doc_border = true,
 	},
 	routes = {
 		{
 			filter = {
-				-- This covers both standard messages and plugin notifications
 				any = {
 					{ event = "msg_show", find = "Missing frontmatter, name or interaction" },
 					{ event = "notify", find = "Missing frontmatter, name or interaction" },
@@ -382,6 +403,13 @@ require("blink.cmp").setup({
 	completion = {
 		documentation = {
 			auto_show = true,
+			window = {
+				border = "rounded",
+				direction_priority = {
+					menu_north = { "e", "w", "n", "s" },
+					menu_south = { "e", "w", "s", "n" },
+				},
+			},
 		},
 	},
 	keymap = {
@@ -503,10 +531,22 @@ local lsp_servers = {
 	codelldb = {},
 
 	-- Python (basedpyright)
+	ruff = {}, -- Add this to your lsp_servers table
 	basedpyright = {
 		basedpyright = {
-			typeCheckingMode = "off",
-			logLevel = "error",
+			analysis = {
+				autoSearchPaths = true,
+				diagnosticMode = "openFilesOnly",
+				autoImportCompletions = true,
+				useLibraryCodeForTypes = true,
+				typeCheckingMode = "strict", -- Changed from "off" to "basic" for better help
+				inlayHints = {
+					variableTypes = true,
+					functionReturnTypes = true,
+					callArgumentNames = false, -- This is often what clutters the 'print' calls
+					genericTypes = true,
+				},
+			},
 		},
 	},
 
@@ -532,7 +572,7 @@ require("mason").setup()
 require("mason-lspconfig").setup()
 
 -- Build an ensure_installed list containing formatters + LSP server names
-local ensure = { "black", "prettier", "shfmt", "stylua" }
+local ensure = { "ruff", "prettier", "shfmt", "stylua" }
 -- merge in lsp server names
 for _, srv in ipairs(vim.tbl_keys(lsp_servers)) do
 	table.insert(ensure, srv)
@@ -608,7 +648,7 @@ require("conform").setup({
 
 	-- mapping ft -> formatters
 	formatters_by_ft = {
-		python = { "black" },
+		python = { "ruff" },
 		rust = { "rustfmt" },
 		javascript = { "prettier" },
 		typescript = { "prettier" },
@@ -644,6 +684,9 @@ require("conform").setup({
 		},
 	},
 })
+-- check which python we are using
+vim.keymap.set("n", "<leader>py", "<cmd>!which python<CR>", { desc = "Check Python Path" })
+
 vim.keymap.set("n", "<leader>h", function()
 	local enabled = vim.lsp.inlay_hint.is_enabled()
 	vim.lsp.inlay_hint.enable(not enabled)
