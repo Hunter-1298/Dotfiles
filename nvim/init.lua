@@ -32,6 +32,13 @@ vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
 vim.opt.textwidth = 80
 
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "python",
+	callback = function()
+		vim.opt_local.wrap = false
+	end,
+})
+
 vim.diagnostic.config({
 	signs = {
 		text = {
@@ -535,23 +542,25 @@ local lsp_servers = {
 
 	-- Python (basedpyright)
 	ruff = {}, -- Add this to your lsp_servers table
-	basedpyright = {
-		basedpyright = {
-			analysis = {
-				autoSearchPaths = true,
-				diagnosticMode = "openFilesOnly",
-				autoImportCompletions = true,
-				useLibraryCodeForTypes = true,
-				typeCheckingMode = "strict", -- Changed from "off" to "basic" for better help
-				inlayHints = {
-					variableTypes = true,
-					functionReturnTypes = true,
-					callArgumentNames = false, -- This is often what clutters the 'print' calls
-					genericTypes = true,
-				},
-			},
-		},
-	},
+	ty = {},
+	-- basedpyright = {
+	-- 	basedpyright = {
+	-- 		analysis = {
+	-- 			pythonVersion = "3.14",
+	-- 			autoSearchPaths = true,
+	-- 			diagnosticMode = "openFilesOnly",
+	-- 			autoImportCompletions = true,
+	-- 			useLibraryCodeForTypes = true,
+	-- 			typeCheckingMode = "basic", -- Changed from "off" to "basic" for better help
+	-- 			inlayHints = {
+	-- 				variableTypes = true,
+	-- 				functionReturnTypes = true,
+	-- 				callArgumentNames = false, -- This is often what clutters the 'print' calls
+	-- 				genericTypes = true,
+	-- 			},
+	-- 		},
+	-- 	},
+	-- },
 
 	-- JavaScript / TypeScript
 	ts_ls = {},
