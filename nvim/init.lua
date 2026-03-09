@@ -22,7 +22,7 @@ vim.opt.inccommand = "split"
 vim.opt.cursorline = true
 vim.opt.hlsearch = true
 vim.opt.breakindent = true
-vim.opt.wrap = true
+vim.opt.wrap = false
 vim.opt.fileformats = { "unix", "dos" }
 vim.cmd([[autocmd FileType * set formatoptions-=ro]])
 
@@ -42,10 +42,10 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.diagnostic.config({
 	signs = {
 		text = {
-			[vim.diagnostic.severity.ERROR] = " ",
-			[vim.diagnostic.severity.WARN] = " ",
-			[vim.diagnostic.severity.INFO] = " ",
-			[vim.diagnostic.severity.HINT] = " ",
+			[vim.diagnostic.severity.ERROR] = " ",
+			[vim.diagnostic.severity.WARN] = " ",
+			[vim.diagnostic.severity.INFO] = " ",
+			[vim.diagnostic.severity.HINT] = " ",
 		},
 	},
 	-- Inline diagnostics
@@ -98,6 +98,7 @@ vim.keymap.set("n", "<M-k>", ":resize +8<CR>", { silent = true })
 vim.keymap.set("n", "<M-j>", ":resize -8<CR>", { silent = true })
 vim.keymap.set("n", "<M-h>", ":vertical resize -8<CR>", { silent = true })
 vim.keymap.set("n", "<M-l>", ":vertical resize +8<CR>", { silent = true })
+
 -- INFO: plugins (using vim.pack)
 vim.pack.add({
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
@@ -140,6 +141,9 @@ vim.pack.add({
 	-- bufferline
 	"https://github.com/akinsho/bufferline.nvim",
 
+	-- git diff
+	"https://github.com/sindrets/diffview.nvim",
+
 	-- statusline
 	"https://github.com/nvim-mini/mini.statusline",
 	"https://github.com/nvim-mini/mini.pairs",
@@ -148,6 +152,7 @@ vim.pack.add({
 
 	-- indent blankline
 	"https://github.com/lukas-reineke/indent-blankline.nvim",
+
 	-- noice -- command line only
 	"https://github.com/MunifTanjim/nui.nvim",
 	"https://github.com/rcarriga/nvim-notify",
@@ -183,14 +188,15 @@ vim.keymap.set(
 	"<cmd>ZenMode<cr>",
 	{ noremap = true, silent = true, desc = "[C]hat [T]oggle" }
 )
+
 -- CodeCompanion Setup
 require("codecompanion").setup({
 	display = {
 		chat = {
 			window = {
 				layout = "vertical", -- Options: "vertical", "horizontal", "float", "buffer"
-				position = "left", -- Can be "left" or "right"
-				width = 75, -- Fixed width of 45 columns
+				position = "right", -- Can be "left" or "right"
+				width = 10, -- Fixed width of 45 columns
 			},
 		},
 	},
@@ -287,6 +293,7 @@ vim.keymap.set(
 	"<cmd>CodeCompanion<cr>",
 	{ noremap = true, silent = true, desc = "[C]hat [I]nline" }
 )
+
 -- bufferline setup
 require("bufferline").setup({})
 
@@ -301,11 +308,11 @@ vim.keymap.set({ "o", "x" }, "R", flash.treesitter_search, { desc = "Treesitter 
 -- ToggleTerm setup: horizontal terminal only
 require("toggleterm").setup({
 	size = function(term)
-		if term.direction == "horizontal" then
-			return 15 -- height of horizontal terminal in lines
+		if term.direction == "vertical" then
+			return 60 -- height of horizontal terminal in lines
 		end
 	end,
-	direction = "horizontal", -- always horizontal
+	direction = "vertical", -- always horizontal
 	start_in_insert = true, -- start terminal in insert mode
 	close_on_exit = true, -- close terminal when process exits
 	shade_terminals = true, -- darken terminal background
@@ -318,11 +325,11 @@ require("toggleterm").setup({
 
 -- Create a terminal object for manual toggle
 local Terminal = require("toggleterm.terminal").Terminal
-local horizontal_term = Terminal:new({ direction = "horizontal", size = 15 })
+local vertical_term = Terminal:new({ direction = "vertical", size = 15 })
 
 -- Map <leader>t to toggle the horizontal terminal
 vim.keymap.set("n", "<leader>t", function()
-	horizontal_term:toggle()
+	vertical_term:toggle()
 	-- Ensure insert mode every toggle
 end, { noremap = true, silent = true })
 
@@ -373,11 +380,11 @@ require("noice").setup({
 		view = "cmdline_popup",
 		opts = {},
 		format = {
-			cmdline = { pattern = "^:", icon = "", lang = "vim" },
-			search_down = { kind = "search", pattern = "^/", icon = " ", lang = "regex" },
-			search_up = { kind = "search", pattern = "^%?", icon = " ", lang = "regex" },
-			lua = { pattern = { "^:%s*lua%s+", "^:%s*lua%s*=%s*", "^:%s*=%s*" }, icon = "", lang = "lua" },
-			help = { pattern = "^:%s*he?l?p?%s+", icon = "" },
+			cmdline = { pattern = "^:", icon = "", lang = "vim" },
+			search_down = { kind = "search", pattern = "^/", icon = " ", lang = "regex" },
+			search_up = { kind = "search", pattern = "^%?", icon = " ", lang = "regex" },
+			lua = { pattern = { "^:%s*lua%s+", "^:%s*lua%s*=%s*", "^:%s*=%s*" }, icon = "", lang = "lua" },
+			help = { pattern = "^:%s*he?l?p?%s+", icon = "" },
 			input = {},
 		},
 	},
@@ -387,8 +394,6 @@ require("noice").setup({
 	popupmenu = {
 		enabled = true,
 	},
-	-- Note: Removed the standalone signature = { enabled = true }
-	-- as it is now handled inside the lsp block above.
 	presets = {
 		bottom_search = false,
 		command_palette = false,
@@ -408,6 +413,7 @@ require("noice").setup({
 		},
 	},
 })
+
 -- blink.cmp setup
 require("blink.cmp").setup({
 	completion = {
@@ -482,7 +488,7 @@ vim.keymap.set("n", "<leader>sm", pickers.man_pages, { desc = "[S]earch [M]anual
 -- which-key setup
 require("which-key").setup({
 	spec = {
-		{ "<leader>s", group = "[S]earch", icon = { icon = "", color = "green" } },
+		{ "<leader>s", group = "[S]earch", icon = { icon = "", color = "green" } },
 	},
 })
 
@@ -500,8 +506,6 @@ require("oil").setup({
 		["<leader>e"] = "actions.close",
 		["v"] = {
 			callback = function()
-				-- require("oil").select() is the internal action for picking a file
-				-- We pass the options you found in the documentation here
 				require("oil").select({ vertical = true })
 			end,
 			desc = "Open the entry under cursor in a vertical split",
@@ -514,8 +518,7 @@ require("oil").setup({
 })
 vim.keymap.set("n", "<leader>e", "<CMD>Oil --float --preview<CR>", { desc = "File navigation" })
 vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent dir" })
--- Custom mapping for opening files in vertical split using Oil
--- Create a custom keybinding for vertical split in Oil
+
 -- INFO: lsp server installation and configuration
 local lsp_servers = {
 	-- Lua
@@ -530,6 +533,9 @@ local lsp_servers = {
 	-- C/C++
 	clangd = {},
 
+	-- Zig
+	zls = {},
+
 	-- Rust
 	rust_analyzer = {
 		["rust-analyzer"] = {
@@ -541,7 +547,7 @@ local lsp_servers = {
 	codelldb = {},
 
 	-- Python (basedpyright)
-	ruff = {}, -- Add this to your lsp_servers table
+	ruff = {},
 	ty = {},
 	-- basedpyright = {
 	-- 	basedpyright = {
@@ -551,11 +557,11 @@ local lsp_servers = {
 	-- 			diagnosticMode = "openFilesOnly",
 	-- 			autoImportCompletions = true,
 	-- 			useLibraryCodeForTypes = true,
-	-- 			typeCheckingMode = "basic", -- Changed from "off" to "basic" for better help
+	-- 			typeCheckingMode = "basic",
 	-- 			inlayHints = {
 	-- 				variableTypes = true,
 	-- 				functionReturnTypes = true,
-	-- 				callArgumentNames = false, -- This is often what clutters the 'print' calls
+	-- 				callArgumentNames = false,
 	-- 				genericTypes = true,
 	-- 			},
 	-- 		},
@@ -595,7 +601,6 @@ require("mason-tool-installer").setup({
 })
 
 -- Configure each lsp server
--- Note: we call config exactly like your earlier loop but ensure settings shape is correct
 for server, config in pairs(lsp_servers) do
 	vim.lsp.config(server, {
 		settings = config,
@@ -620,7 +625,6 @@ for server, config in pairs(lsp_servers) do
 			if client.server_capabilities.documentHighlightProvider then
 				local group = vim.api.nvim_create_augroup("LspReferenceHighlight_" .. bufnr, { clear = true })
 
-				-- Highlight references when cursor moves (not in insert mode)
 				vim.api.nvim_create_autocmd("CursorMoved", {
 					group = group,
 					buffer = bufnr,
@@ -633,7 +637,6 @@ for server, config in pairs(lsp_servers) do
 					end,
 				})
 
-				-- Clear highlights in insert mode
 				vim.api.nvim_create_autocmd("CursorMovedI", {
 					group = group,
 					buffer = bufnr,
@@ -643,13 +646,14 @@ for server, config in pairs(lsp_servers) do
 					end,
 				})
 			end
-			-------------------------------------------------------------------
 		end,
 	})
 end
+
 vim.api.nvim_set_hl(0, "LspReferenceText", { link = "Visual" })
 vim.api.nvim_set_hl(0, "LspReferenceRead", { link = "Visual" })
 vim.api.nvim_set_hl(0, "LspReferenceWrite", { link = "Visual" })
+
 -- Conform.nvim setup (formatters + format-on-save)
 require("conform").setup({
 	-- try Conform formatters first; if none available, allow LSP fallback
@@ -682,20 +686,15 @@ require("conform").setup({
 		black = {
 			prepend_args = { "--fast" },
 		},
-		rustfmt = {
-			-- rustfmt reads rustfmt.toml automatically; override args here if needed
-		},
-		prettier = {
-			-- will use project settings (prettierrc) if present
-		},
+		rustfmt = {},
+		prettier = {},
 		shfmt = {
-			args = { "-i", "2", "-ci" }, -- example: indent=2, continue indent
+			args = { "-i", "2", "-ci" },
 		},
-		stylua = {
-			-- use project settings if present, fallback options could be added
-		},
+		stylua = {},
 	},
 })
+
 -- check which python we are using
 vim.keymap.set("n", "<leader>py", "<cmd>!which python<CR>", { desc = "Check Python Path" })
 
@@ -703,6 +702,67 @@ vim.keymap.set("n", "<leader>h", function()
 	local enabled = vim.lsp.inlay_hint.is_enabled()
 	vim.lsp.inlay_hint.enable(not enabled)
 end, { desc = "Toggle Inlay Hints" })
+
+-- diffview config
+local is_git_ignored = function(filepath)
+	vim.fn.system("git check-ignore -q " .. vim.fn.shellescape(filepath))
+	return vim.v.shell_error == 0
+end
+
+local update_left_pane = function()
+	pcall(function()
+		local lib = require("diffview.lib")
+		local view = lib.get_current_view()
+		if view then
+			view:update_files()
+		end
+	end)
+end
+
+vim.notify("[diffview] init")
+
+require("custom.directory-watcher").registerOnChangeHandler("diffview", function(filepath, events)
+	local is_in_dot_git_dir = filepath:match("/%.git/") or filepath:match("^%.git/")
+
+	if is_in_dot_git_dir or not is_git_ignored(filepath) then
+		vim.notify("[diffview] File changed: " .. vim.fn.fnamemodify(filepath, ":t"), vim.log.levels.INFO)
+		update_left_pane()
+	end
+end)
+
+vim.api.nvim_create_autocmd("FocusGained", {
+	callback = update_left_pane,
+})
+
+vim.api.nvim_create_autocmd("User", {
+	pattern = "DiffviewViewLeave",
+	callback = function()
+		vim.cmd("DiffviewClose")
+	end,
+})
+
+require("diffview").setup({
+	default_args = {
+		DiffviewOpen = { "--imply-local" },
+	},
+	keymaps = {
+		view = {
+			{ "n", "q", "<cmd>DiffviewClose<cr>", { desc = "Close diffview" } },
+		},
+		file_panel = {
+			{ "n", "q", "<cmd>DiffviewClose<cr>", { desc = "Close diffview" } },
+		},
+		file_history_panel = {
+			{ "n", "q", "<cmd>DiffviewClose<cr>", { desc = "Close diffview" } },
+		},
+	},
+})
+
+vim.keymap.set("n", "<leader>gd", "<cmd>DiffviewOpen<CR>", { silent = true })
+
+-- custom dir watchers and yankers for claude code
+require("custom.hotreload")
+require("custom.yank")
 
 -- uncomment to enable automatic plugin updates
 -- vim.pack.update()
