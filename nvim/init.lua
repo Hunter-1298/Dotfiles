@@ -23,6 +23,7 @@ vim.opt.cursorline = true
 vim.opt.hlsearch = true
 vim.opt.breakindent = true
 vim.opt.wrap = false
+vim.opt.autoread = true
 vim.opt.fileformats = { "unix", "dos" }
 vim.cmd([[autocmd FileType * set formatoptions-=ro]])
 
@@ -181,6 +182,9 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+--undo tree
+vim.cmd("packadd nvim.undotree")
+vim.keymap.set("n", "<leader>u", require("undotree").open)
 -- set zenmode
 vim.keymap.set(
 	{ "n", "v" },
@@ -761,7 +765,7 @@ require("diffview").setup({
 vim.keymap.set("n", "<leader>gd", "<cmd>DiffviewOpen<CR>", { silent = true })
 
 -- custom dir watchers and yankers for claude code
-require("custom.hotreload")
+require("custom.hotreload").setup()
 require("custom.yank")
 
 -- uncomment to enable automatic plugin updates
