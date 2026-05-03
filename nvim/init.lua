@@ -103,7 +103,7 @@ vim.keymap.set("n", "<M-l>", ":vertical resize +8<CR>", { silent = true })
 -- INFO: plugins (using vim.pack)
 vim.pack.add({
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
-	{ src = "https://github.com/saghen/blink.cmp", version = "1.*" },
+	{ src = "https://github.com/saghen/blink.cmp", version = "v1" },
 	{ src = "https://github.com/rktjmp/lush.nvim" },
 	{ src = "https://github.com/ellisonleao/gruvbox.nvim" },
 	{ src = "https://github.com/ribru17/bamboo.nvim" },
@@ -113,6 +113,7 @@ vim.pack.add({
 	{ src = "https://github.com/scottmckendry/cyberdream.nvim" },
 	{ src = "https://github.com/EdenEast/nightfox.nvim" },
 	{ src = "https://github.com/tanvirtin/monokai.nvim" },
+	{ src = "https://github.com/uloco/bluloco.nvim" },
 
 	-- core LSP and mason toolkit
 	"https://github.com/neovim/nvim-lspconfig",
@@ -174,8 +175,8 @@ vim.pack.add({
 
 -- colorscheme
 -- vim.cmd("colorscheme bamboo")
--- require("cyberdream").setup({ transparent = true })
-vim.cmd("colorscheme melange")
+require("cyberdream").setup({ transparent = true })
+vim.cmd("colorscheme cyberdream")
 vim.api.nvim_create_autocmd("FileType", {
 	callback = function()
 		pcall(vim.treesitter.start)
@@ -415,30 +416,6 @@ require("noice").setup({
 			},
 			opts = { skip = true },
 		},
-	},
-})
-
--- blink.cmp setup
-require("blink.cmp").setup({
-	completion = {
-		documentation = {
-			auto_show = true,
-			window = {
-				border = "rounded",
-				direction_priority = {
-					menu_north = { "e", "w", "n", "s" },
-					menu_south = { "e", "w", "s", "n" },
-				},
-			},
-		},
-	},
-	keymap = {
-		["<S-Tab>"] = { "select_prev", "fallback_to_mappings" },
-		["<Tab>"] = { "select_next", "fallback_to_mappings" },
-		["<CR>"] = { "select_and_accept", "fallback" },
-	},
-	fuzzy = {
-		implementation = "prefer_rust_with_warning",
 	},
 })
 
@@ -767,6 +744,3 @@ vim.keymap.set("n", "<leader>gd", "<cmd>DiffviewOpen<CR>", { silent = true })
 -- custom dir watchers and yankers for claude code
 require("custom.hotreload").setup()
 require("custom.yank")
-
--- uncomment to enable automatic plugin updates
--- vim.pack.update()

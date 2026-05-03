@@ -15,7 +15,11 @@
     "blink.cmp": {
       "rev": "b19413d214068f316c78978b08264ed1c41830ec",
       "src": "https://github.com/saghen/blink.cmp",
-      "version": "'1.*'"
+      "version": "'v1'"
+    },
+    "bluloco.nvim": {
+      "rev": "4daabf6a9e6b9ecdcb19e7c78e888be0bacd866c",
+      "src": "https://github.com/uloco/bluloco.nvim"
     },
     "bufferline.nvim": {
       "rev": "655133c3b4c3e5e05ec549b9f8cc2894ac6f51b3",
