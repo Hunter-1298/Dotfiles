@@ -15,8 +15,7 @@
 // `@mariozechner/pi-ai` is provided to extensions at runtime by pi's jiti
 // loader (via virtualModules / aliases — see pi-coding-agent's
 // extensions/loader.js). Standalone tsc / editors can't resolve it; the
-// minimal surface we use is declared in `pi-runtime-shims.d.ts` next to
-// this file.
+// minimal surface we use is declared in `../types/pi-runtime-shims.d.ts`.
 import { completeSimple, type UserMessage } from "@mariozechner/pi-ai";
 import type {
 	ExtensionAPI,
