@@ -1,0 +1,22 @@
+{
+  "lastChangelogVersion": "0.72.1",
+  "defaultProvider": "anthropic",
+  "defaultModel": "claude-opus-4-7",
+  "packages": [
+    "npm:pi-subagents",
+    "npm:pi-mcp-adapter",
+    "npm:@plannotator/pi-extension",
+    "npm:pi-lens",
+    "npm:pi-powerline-footer",
+    "npm:@juicesharp/rpiv-todo",
+    "npm:pi-btw",
+    "npm:pi-interactive-shell",
+    "npm:pi-tmux-window-name",
+    "npm:@juicesharp/rpiv-ask-user-question",
+    "npm:pi-goal",
+    "npm:pi-web-access",
+    "npm:@sentiolabs/pi-frontend-design"
+  ],
+  "defaultThinkingLevel": "xhigh",
+  "hideThinkingBlock": true
+}

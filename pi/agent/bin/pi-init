@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# pi-init: drop a project AGENTS.md template into the current directory.
+#
+# Usage:
+#   pi-init                # uses the 'fullstack' template
+#   pi-init <template>     # e.g. pi-init fullstack
+#   pi-init --list         # list available templates
+#
+# Templates live at ~/.pi/agent/templates/<name>.md
+# Refuses to overwrite an existing AGENTS.md.
+
+set -euo pipefail
+
+template_dir="${PI_TEMPLATE_DIR:-$HOME/.pi/agent/templates}"
+
+list_templates() {
+  if [[ ! -d "$template_dir" ]]; then
+    echo "pi-init: template dir not found: $template_dir" >&2
+    exit 1
+  fi
+  ls "$template_dir" 2>/dev/null | sed -n 's/\.md$//p'
+}
+
+case "${1:-fullstack}" in
+  -h|--help)
+    sed -n '2,10p' "$0" | sed 's/^# \{0,1\}//'
+    exit 0
+    ;;
+  -l|--list)
+    list_templates
+    exit 0
+    ;;
+esac
+
+template_name="${1:-fullstack}"
+src="$template_dir/${template_name}.md"
+dst="$PWD/AGENTS.md"
+
+if [[ ! -f "$src" ]]; then
+  echo "pi-init: template not found: $src" >&2
+  echo "Available templates:" >&2
+  list_templates | sed 's/^/  /' >&2
+  exit 1
+fi
+
+if [[ -e "$dst" ]]; then
+  echo "pi-init: $dst already exists; refusing to overwrite." >&2
+  exit 1
+fi
+
+cp "$src" "$dst"
+echo "pi-init: wrote $dst from '$template_name' template."

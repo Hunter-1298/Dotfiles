@@ -1,0 +1,20 @@
+# Credentials — NEVER commit
+auth.json
+
+# Runtime / per-session data
+sessions/
+run-history.jsonl
+.heartbeats/
+pi-crash.log
+file-only
+
+# Caches and installed deps
+.ruff_cache/
+node_modules/
+
+# Installable third-party binaries (not configs)
+bin/fd
+
+# Editor / OS noise
+.DS_Store
+*.swp
