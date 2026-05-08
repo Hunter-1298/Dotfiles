@@ -222,22 +222,17 @@ fi
 mkdir -p "$HOME/.config/pi"
 ln -sfn "$HOME/.config/pi" "$HOME/.pi"
 
-# Symlink each tracked item from Dotfiles into the live agent dir.
+# Symlink each tracked top-level item from Dotfiles into the live agent dir.
 # Runtime/local items (sessions/, run-history.jsonl, auth.json, .heartbeats/,
 # node_modules/, caches, bin/fd) stay outside the dotfiles repo — see
-# pi/agent/.gitignore.
+# pi/agent/.gitignore. Discovered dynamically from git so new tracked dirs
+# (e.g. `types/`, future additions) are picked up without editing this script.
 mkdir -p "$HOME/.config/pi/agent"
-PI_TRACKED=(
-	AGENTS.md
-	APPEND_SYSTEM.md
-	package.json
-	settings.json
-	bin
-	extensions
-	notes
-	research
-	skills
-	templates
+mapfile -t PI_TRACKED < <(
+	cd "$DOTFILES_DIR" && \
+		git ls-tree --name-only HEAD pi/agent/ \
+			| sed 's|^pi/agent/||' \
+			| grep -v '^\.gitignore$'
 )
 for item in "${PI_TRACKED[@]}"; do
 	src="$DOTFILES_DIR/pi/agent/$item"
