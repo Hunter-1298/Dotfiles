@@ -16,6 +16,11 @@ import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 //   - HEAD is detached (no named branch)
 //   - already inside a linked worktree (.git at toplevel is a regular file)
 //
+// On child exit we attempt safe cleanup: remove the worktree and delete the
+// agent branch ONLY if the worktree has no uncommitted/untracked changes
+// AND no commits beyond the base branch. Anything risky is left in place
+// with a stderr note so the user can finish or open a PR.
+//
 // The factory returns a Promise that never resolves on the worktree path:
 // process.exit(child.status) ends the parent before pi proceeds with
 // session_start, so AGENTS.md / MCP / system-prompt cwd are loaded fresh
@@ -100,6 +105,75 @@ export async function decide(deps: DecisionDeps): Promise<Decision> {
 	};
 }
 
+function git(
+	args: string[],
+	cwd?: string,
+): { stdout: string; stderr: string; code: number } {
+	const r = spawnSync("git", args, { cwd, encoding: "utf8" });
+	return {
+		stdout: r.stdout ?? "",
+		stderr: r.stderr ?? "",
+		code: r.status ?? 1,
+	};
+}
+
+export function safeCleanup(
+	worktreeDir: string,
+	agentBranch: string,
+	baseBranch: string,
+): { removed: boolean; reason?: string } {
+	if (!existsSync(worktreeDir)) {
+		return { removed: false, reason: "worktree directory missing" };
+	}
+
+	const status = git(["status", "--porcelain"], worktreeDir);
+	if (status.code !== 0) {
+		return {
+			removed: false,
+			reason: `git status failed: ${status.stderr.trim()}`,
+		};
+	}
+	if (status.stdout.trim()) {
+		return { removed: false, reason: "uncommitted or untracked changes" };
+	}
+
+	const ahead = git(
+		["rev-list", "--count", `${baseBranch}..${agentBranch}`],
+		worktreeDir,
+	);
+	if (ahead.code !== 0) {
+		return {
+			removed: false,
+			reason: `git rev-list failed: ${ahead.stderr.trim()}`,
+		};
+	}
+	const aheadCount = ahead.stdout.trim();
+	if (aheadCount !== "0") {
+		return {
+			removed: false,
+			reason: `${aheadCount} unpushed commit(s) on ${agentBranch}`,
+		};
+	}
+
+	const rm = git(["worktree", "remove", worktreeDir]);
+	if (rm.code !== 0) {
+		return {
+			removed: false,
+			reason: `git worktree remove failed: ${rm.stderr.trim()}`,
+		};
+	}
+
+	const del = git(["branch", "-D", agentBranch]);
+	if (del.code !== 0) {
+		return {
+			removed: true,
+			reason: `worktree removed but branch delete failed: ${del.stderr.trim()}`,
+		};
+	}
+
+	return { removed: true };
+}
+
 export default async function (pi: ExtensionAPI) {
 	const decision = await decide({
 		env: process.env,
@@ -144,5 +218,19 @@ export default async function (pi: ExtensionAPI) {
 		stdio: "inherit",
 		env: { ...process.env, [RECURSION_GUARD]: "1" },
 	});
+
+	const result = safeCleanup(worktreeDir, agentBranch, baseBranch);
+	if (result.removed && !result.reason) {
+		process.stderr.write(`auto-worktree: removed ${worktreeDir}\n`);
+	} else if (result.removed && result.reason) {
+		process.stderr.write(
+			`auto-worktree: removed ${worktreeDir} (${result.reason})\n`,
+		);
+	} else {
+		process.stderr.write(
+			`auto-worktree: kept ${worktreeDir} (${result.reason})\n`,
+		);
+	}
+
 	process.exit(child.status ?? 0);
 }
