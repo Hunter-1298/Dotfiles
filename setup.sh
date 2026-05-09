@@ -19,7 +19,15 @@
 
 set -euo pipefail
 
-DOTFILES_DIR="$HOME/.config/Dotfiles"
+# Resolve DOTFILES_DIR from this script's own location so re-runs work whether
+# the repo lives at ~/.config/Dotfiles, an unzipped Dotfiles-main-<ts>/, or
+# anywhere else. Falls back to ~/.config/Dotfiles when the script path can't be
+# resolved (e.g. piped from stdin).
+if [ -n "${BASH_SOURCE[0]:-}" ] && [ -f "${BASH_SOURCE[0]}" ]; then
+	DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+else
+	DOTFILES_DIR="$HOME/.config/Dotfiles"
+fi
 PI_MONITOR_REPO="https://github.com/hshayde/pi-monitor.git"
 PI_MONITOR_DIR="$HOME/Projects/pi-monitor"
 
@@ -237,7 +245,11 @@ mapfile -t PI_TRACKED < <(
 for item in "${PI_TRACKED[@]}"; do
 	src="$DOTFILES_DIR/pi/agent/$item"
 	dst="$HOME/.config/pi/agent/$item"
-	if [ -e "$src" ]; then
+	# Accept dangling symlinks too: the heartbeat extension link only resolves
+	# once ~/Projects/pi-monitor is cloned (handled above, but may have failed
+	# offline). -e follows the link and reports false on a broken target, so
+	# we also accept -L to install it eagerly.
+	if [ -e "$src" ] || [ -L "$src" ]; then
 		ln -sfn "$src" "$dst"
 	fi
 done
