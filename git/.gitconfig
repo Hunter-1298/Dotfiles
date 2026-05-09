@@ -22,3 +22,9 @@ lol = log --graph --decorate --oneline --format='\
 lola = !git lol --all
 [safe]
 	directory = /Users/hunterhayden/.config/nvim
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
