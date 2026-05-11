@@ -25,10 +25,12 @@ import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 //   - already inside a linked worktree whose branch is not agent/*, or is
 //     agent/* but has no recorded base branch (genuine user worktree)
 //
-// On child exit we attempt safe cleanup: remove the worktree and delete the
-// agent branch ONLY if the worktree has no uncommitted/untracked changes
-// AND no commits beyond the base branch. Anything risky is left in place
-// with a stderr note so the user can finish or open a PR.
+// On child exit we attempt safe cleanup: remove the worktree, delete the
+// local agent branch, and delete the remote agent branch ONLY if the
+// worktree has no uncommitted/untracked changes AND (no commits beyond the
+// base branch OR every local commit is also on origin/<branch> with no
+// divergence). Anything risky is left in place with a stderr note so the
+// user can finish or open a PR.
 //
 // The factory returns a Promise that never resolves on the worktree path:
 // process.exit(child.status) ends the parent before pi proceeds with
@@ -169,6 +171,61 @@ function git(
 	};
 }
 
+// Decide whether a branch's commits are safe to discard: either it has no
+// commits past the base, or every commit is also present on the remote with
+// no divergence. Pure-ish so it can be reused by pi-worktree-gc against
+// dir-less branches by passing a cwd that has an origin remote.
+export function checkBranchSafe(
+	agentBranch: string,
+	baseBranch: string,
+	cwd?: string,
+): { safe: true } | { safe: false; reason: string } {
+	const ahead = git(
+		["rev-list", "--count", `${baseBranch}..${agentBranch}`],
+		cwd,
+	);
+	if (ahead.code !== 0) {
+		return { safe: false, reason: `git rev-list failed: ${ahead.stderr.trim()}` };
+	}
+	const aheadCount = ahead.stdout.trim();
+	if (aheadCount === "0") {
+		return { safe: true };
+	}
+
+	const remoteRef = `refs/remotes/origin/${agentBranch}`;
+	const remoteExists = git(
+		["rev-parse", "--verify", "--quiet", remoteRef],
+		cwd,
+	);
+	if (remoteExists.code !== 0) {
+		return {
+			safe: false,
+			reason: `${aheadCount} unpushed commit(s) on ${agentBranch}`,
+		};
+	}
+
+	const localOnly = git(
+		["rev-list", "--count", `origin/${agentBranch}..${agentBranch}`],
+		cwd,
+	);
+	const remoteOnly = git(
+		["rev-list", "--count", `${agentBranch}..origin/${agentBranch}`],
+		cwd,
+	);
+	const local = localOnly.stdout.trim();
+	const remote = remoteOnly.stdout.trim();
+	if (localOnly.code !== 0 || remoteOnly.code !== 0) {
+		return { safe: false, reason: "could not compare with origin" };
+	}
+	if (local !== "0" || remote !== "0") {
+		return {
+			safe: false,
+			reason: `not in sync with origin (local +${local}, remote +${remote})`,
+		};
+	}
+	return { safe: true };
+}
+
 export function safeCleanup(
 	worktreeDir: string,
 	agentBranch: string,
@@ -189,22 +246,25 @@ export function safeCleanup(
 		return { removed: false, reason: "uncommitted or untracked changes" };
 	}
 
-	const ahead = git(
-		["rev-list", "--count", `${baseBranch}..${agentBranch}`],
+	const safety = checkBranchSafe(agentBranch, baseBranch, worktreeDir);
+	if (!safety.safe) {
+		return { removed: false, reason: safety.reason };
+	}
+
+	// Drop the remote branch first — if the network/push fails we want to
+	// stop before destroying the local copy so the user can retry.
+	const remoteExists = git(
+		["rev-parse", "--verify", "--quiet", `refs/remotes/origin/${agentBranch}`],
 		worktreeDir,
 	);
-	if (ahead.code !== 0) {
-		return {
-			removed: false,
-			reason: `git rev-list failed: ${ahead.stderr.trim()}`,
-		};
-	}
-	const aheadCount = ahead.stdout.trim();
-	if (aheadCount !== "0") {
-		return {
-			removed: false,
-			reason: `${aheadCount} unpushed commit(s) on ${agentBranch}`,
-		};
+	if (remoteExists.code === 0) {
+		const push = git(["push", "origin", "--delete", agentBranch], worktreeDir);
+		if (push.code !== 0) {
+			return {
+				removed: false,
+				reason: `remote branch delete failed: ${push.stderr.trim()}`,
+			};
+		}
 	}
 
 	const rm = git(["worktree", "remove", worktreeDir]);
