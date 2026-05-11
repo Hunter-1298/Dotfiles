@@ -10,11 +10,20 @@ import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 // agent/<branch>-<ts>, then re-exec pi inside it. The parent pi blocks on
 // the child via spawnSync so the user sees a single continuous process.
 //
+// We also handle the "new tab inside an existing agent worktree" case:
+// terminal emulators (e.g. Ghostty) inherit cwd for new tabs by default,
+// so opening a tab from a window already running pi inside
+// <repo>-<branch>-<ts> would otherwise land another pi in the SAME
+// worktree. When we detect that situation (linked worktree AND branch is
+// agent/*) we look up the base branch we recorded at creation time and
+// spin up a fresh worktree next to the main repo instead.
+//
 // Skip (pi runs normally) when:
 //   - PI_WORKTREE_ALREADY=1 is set (we are the re-exec child)
 //   - not inside a git repo
 //   - HEAD is detached (no named branch)
-//   - already inside a linked worktree (.git at toplevel is a regular file)
+//   - already inside a linked worktree whose branch is not agent/*, or is
+//     agent/* but has no recorded base branch (genuine user worktree)
 //
 // On child exit we attempt safe cleanup: remove the worktree and delete the
 // agent branch ONLY if the worktree has no uncommitted/untracked changes
@@ -27,6 +36,11 @@ import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 // in the child against the worktree.
 
 const RECURSION_GUARD = "PI_WORKTREE_ALREADY";
+const PI_BASE_CONFIG_KEY = "piBase";
+
+function baseConfigKey(agentBranch: string): string {
+	return `branch.${agentBranch}.${PI_BASE_CONFIG_KEY}`;
+}
 
 interface ExecResult {
 	stdout: string;
@@ -65,11 +79,6 @@ export async function decide(deps: DecisionDeps): Promise<Decision> {
 	}
 	const toplevel = top.stdout.trim();
 
-	const dotGit = join(toplevel, ".git");
-	if (deps.statIsFile(dotGit)) {
-		return { action: "skip", reason: "already in a linked worktree" };
-	}
-
 	const branchResult = await deps.exec("git", [
 		"symbolic-ref",
 		"--short",
@@ -80,7 +89,50 @@ export async function decide(deps: DecisionDeps): Promise<Decision> {
 	}
 	const branch = branchResult.stdout.trim();
 
-	const safeBranch = branch.replace(/\//g, "-");
+	const dotGit = join(toplevel, ".git");
+	const inLinkedWorktree = deps.statIsFile(dotGit);
+
+	let baseBranch: string;
+	let mainRepoToplevel: string;
+
+	if (inLinkedWorktree) {
+		// Tabs / panes that inherit cwd from a window already running pi will
+		// land here. Only treat this as a re-launch when the worktree is one we
+		// created (branch is agent/*) AND we can recover the base branch from
+		// the marker we wrote at creation. Anything else is a user-managed
+		// worktree and we leave it alone.
+		if (!branch.startsWith("agent/")) {
+			return { action: "skip", reason: "already in a linked worktree" };
+		}
+
+		const piBase = await deps.exec("git", [
+			"config",
+			"--get",
+			baseConfigKey(branch),
+		]);
+		if (piBase.code !== 0 || !piBase.stdout.trim()) {
+			return {
+				action: "skip",
+				reason: "in agent worktree but no recorded base branch",
+			};
+		}
+		baseBranch = piBase.stdout.trim();
+
+		const commonDir = await deps.exec("git", [
+			"rev-parse",
+			"--path-format=absolute",
+			"--git-common-dir",
+		]);
+		if (commonDir.code !== 0 || !commonDir.stdout.trim()) {
+			return { action: "skip", reason: "could not resolve main repo path" };
+		}
+		mainRepoToplevel = dirname(commonDir.stdout.trim());
+	} else {
+		baseBranch = branch;
+		mainRepoToplevel = toplevel;
+	}
+
+	const safeBranch = baseBranch.replace(/\//g, "-");
 	const d = deps.now();
 	const ts =
 		`${d.getFullYear()}` +
@@ -90,9 +142,9 @@ export async function decide(deps: DecisionDeps): Promise<Decision> {
 		`${String(d.getHours()).padStart(2, "0")}` +
 		`${String(d.getMinutes()).padStart(2, "0")}` +
 		`${String(d.getSeconds()).padStart(2, "0")}`;
-	const repoName = basename(toplevel);
+	const repoName = basename(mainRepoToplevel);
 	const worktreeDir = join(
-		dirname(toplevel),
+		dirname(mainRepoToplevel),
 		`${repoName}-${safeBranch}-${ts}`,
 	);
 	const agentBranch = `agent/${safeBranch}-${ts}`;
@@ -101,7 +153,7 @@ export async function decide(deps: DecisionDeps): Promise<Decision> {
 		action: "worktree",
 		worktreeDir,
 		agentBranch,
-		baseBranch: branch,
+		baseBranch,
 	};
 }
 
@@ -171,6 +223,11 @@ export function safeCleanup(
 		};
 	}
 
+	// `git branch -D` does not clean up `branch.<name>.*` config; drop the
+	// piBase marker so stale keys don't accumulate. Best-effort; ignore
+	// failures (exit 5 = key already absent).
+	git(["config", "--unset", baseConfigKey(agentBranch)]);
+
 	return { removed: true };
 }
 
@@ -211,6 +268,22 @@ export default async function (pi: ExtensionAPI) {
 			`auto-worktree: worktree creation failed (${created.stderr.trim()}); continuing in current directory\n`,
 		);
 		return;
+	}
+
+	// Record the base branch on the agent branch's config so a pi launched
+	// in a new terminal tab that inherits this worktree's cwd can recover it
+	// and create its own fresh worktree instead of piling on top.
+	const recordBase = await pi.exec("git", [
+		"-C",
+		worktreeDir,
+		"config",
+		baseConfigKey(agentBranch),
+		baseBranch,
+	]);
+	if (recordBase.code !== 0) {
+		process.stderr.write(
+			`auto-worktree: failed to record base branch (${recordBase.stderr.trim()}); new tabs in ${worktreeDir} will skip worktree creation\n`,
+		);
 	}
 
 	const child = spawnSync("pi", process.argv.slice(2), {
