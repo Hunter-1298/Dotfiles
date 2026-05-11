@@ -242,6 +242,62 @@ mapfile -t PI_TRACKED < <(
 			| sed 's|^pi/agent/||' \
 			| grep -v '^\.gitignore$'
 )
+
+# Tracked dirs that must remain REAL directories in the live tree because they
+# also hold local-only files (gitignored). For these, symlink each tracked
+# child individually instead of replacing the whole directory.
+PI_REAL_DIRS=(bin)
+
+is_pi_real_dir() {
+	local base="$1" d
+	for d in "${PI_REAL_DIRS[@]}"; do
+		[ "$base" = "$d" ] && return 0
+	done
+	return 1
+}
+
+# Link src into dst, preserving local-only files. Behaviour by dst shape:
+#   • dst is a known-mixed dir (PI_REAL_DIRS): keep dst real, per-file links.
+#   • dst is a symlink (any target): replace atomically.
+#   • dst missing or a regular file: ln -sfn (clobber).
+#   • dst is a real dir AND src is a real dir: recurse into src and link
+#     each child into dst. This fixes the historical bug where ln -sfn
+#     against an existing real dir created a nested dst/$(basename src)
+#     self-symlink instead of replacing.
+link_pi_item() {
+	local src="$1" dst="$2" base child
+	base="$(basename "$dst")"
+
+	if [ -d "$src" ] && [ ! -L "$src" ] && is_pi_real_dir "$base"; then
+		mkdir -p "$dst"
+		for child in "$src"/*; do
+			[ -e "$child" ] || [ -L "$child" ] || continue
+			ln -sfn "$child" "$dst/$(basename "$child")"
+		done
+		return 0
+	fi
+
+	if [ -L "$dst" ]; then
+		ln -sfn "$src" "$dst"
+		return 0
+	fi
+
+	if [ ! -e "$dst" ] || [ -f "$dst" ]; then
+		ln -sfn "$src" "$dst"
+		return 0
+	fi
+
+	if [ -d "$dst" ] && [ -d "$src" ] && [ ! -L "$src" ]; then
+		for child in "$src"/*; do
+			[ -e "$child" ] || [ -L "$child" ] || continue
+			link_pi_item "$child" "$dst/$(basename "$child")"
+		done
+		return 0
+	fi
+
+	warn "skipping $dst: unexpected shape (dst=$(stat -c %F "$dst" 2>/dev/null || echo unknown), src=$(stat -c %F "$src" 2>/dev/null || echo unknown))"
+}
+
 for item in "${PI_TRACKED[@]}"; do
 	src="$DOTFILES_DIR/pi/agent/$item"
 	dst="$HOME/.config/pi/agent/$item"
@@ -250,7 +306,7 @@ for item in "${PI_TRACKED[@]}"; do
 	# offline). -e follows the link and reports false on a broken target, so
 	# we also accept -L to install it eagerly.
 	if [ -e "$src" ] || [ -L "$src" ]; then
-		ln -sfn "$src" "$dst"
+		link_pi_item "$src" "$dst"
 	fi
 done
 
