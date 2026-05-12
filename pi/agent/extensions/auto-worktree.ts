@@ -16,14 +16,19 @@ import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 // <repo>-<branch>-<ts> would otherwise land another pi in the SAME
 // worktree. When we detect that situation (linked worktree AND branch is
 // agent/*) we look up the base branch we recorded at creation time and
-// spin up a fresh worktree next to the main repo instead.
+// spin up a fresh worktree next to the main repo instead. Worktrees
+// created before the piBase config key existed get a regex fallback:
+// parse the timestamp suffix off `agent/<base>-YYYYMMDD-HHMMSS` and use
+// the captured `<base>` if (and only if) it resolves to a real ref.
 //
 // Skip (pi runs normally) when:
 //   - PI_WORKTREE_ALREADY=1 is set (we are the re-exec child)
 //   - not inside a git repo
 //   - HEAD is detached (no named branch)
 //   - already inside a linked worktree whose branch is not agent/*, or is
-//     agent/* but has no recorded base branch (genuine user worktree)
+//     agent/* but has no recorded base branch AND the parsed candidate
+//     doesn't resolve (e.g. nested base like feature/foo whose slashes
+//     were encoded to dashes — we can't round-trip those unambiguously)
 //
 // On child exit we attempt safe cleanup: remove the worktree, delete the
 // local agent branch, and delete the remote agent branch ONLY if the
@@ -94,15 +99,16 @@ export async function decide(deps: DecisionDeps): Promise<Decision> {
 	const dotGit = join(toplevel, ".git");
 	const inLinkedWorktree = deps.statIsFile(dotGit);
 
-	let baseBranch: string;
+	let baseBranch: string | undefined;
 	let mainRepoToplevel: string;
 
 	if (inLinkedWorktree) {
 		// Tabs / panes that inherit cwd from a window already running pi will
 		// land here. Only treat this as a re-launch when the worktree is one we
-		// created (branch is agent/*) AND we can recover the base branch from
-		// the marker we wrote at creation. Anything else is a user-managed
-		// worktree and we leave it alone.
+		// created (branch is agent/*) AND we can recover the base branch — first
+		// from the marker we wrote at creation, then by parsing the agent
+		// branch name itself. Anything else is a user-managed worktree and we
+		// leave it alone.
 		if (!branch.startsWith("agent/")) {
 			return { action: "skip", reason: "already in a linked worktree" };
 		}
@@ -112,13 +118,37 @@ export async function decide(deps: DecisionDeps): Promise<Decision> {
 			"--get",
 			baseConfigKey(branch),
 		]);
-		if (piBase.code !== 0 || !piBase.stdout.trim()) {
-			return {
-				action: "skip",
-				reason: "in agent worktree but no recorded base branch",
-			};
+		if (piBase.code === 0 && piBase.stdout.trim()) {
+			baseBranch = piBase.stdout.trim();
+		} else {
+			// Fallback for agent worktrees created before the piBase config key
+			// was introduced (Dotfiles f200595, 2026-05-11). Branch names we
+			// generate look like `agent/<safeBranch>-YYYYMMDD-HHMMSS`, so peel
+			// the timestamp off the suffix and use the captured prefix — but
+			// only if it resolves to a real ref. `safeBranch` replaces `/` with
+			// `-`, so nested bases like `feature/foo` round-trip to `feature-foo`
+			// which won't be a ref; those drop through to the skip below, which
+			// matches the previous behavior for unrecoverable worktrees.
+			const parsed = branch.match(/^agent\/(.+)-\d{8}-\d{6}$/);
+			const candidate = parsed?.[1];
+			if (candidate) {
+				const verify = await deps.exec("git", [
+					"rev-parse",
+					"--verify",
+					"--quiet",
+					`refs/heads/${candidate}`,
+				]);
+				if (verify.code === 0) {
+					baseBranch = candidate;
+				}
+			}
+			if (baseBranch === undefined) {
+				return {
+					action: "skip",
+					reason: "in agent worktree but no recorded base branch",
+				};
+			}
 		}
-		baseBranch = piBase.stdout.trim();
 
 		const commonDir = await deps.exec("git", [
 			"rev-parse",
