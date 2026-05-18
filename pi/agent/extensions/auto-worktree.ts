@@ -30,12 +30,13 @@ import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 //     doesn't resolve (e.g. nested base like feature/foo whose slashes
 //     were encoded to dashes — we can't round-trip those unambiguously)
 //
-// On child exit we attempt safe cleanup: remove the worktree, delete the
-// local agent branch, and delete the remote agent branch ONLY if the
-// worktree has no uncommitted/untracked changes AND (no commits beyond the
-// base branch OR every local commit is also on origin/<branch> with no
-// divergence). Anything risky is left in place with a stderr note so the
-// user can finish or open a PR.
+// On child exit we attempt safe cleanup: remove the worktree and delete
+// the local agent branch only when the worktree has no uncommitted/
+// untracked changes, has zero commits past the base, AND has no remote
+// counterpart at origin/<agentBranch>. A remote counterpart means the
+// branch may be the source of an open PR — deleting it would close the PR
+// on GitHub — so we keep both worktree and branch and let the user clean
+// up by hand. Remote branches are never deleted by this extension.
 //
 // The factory returns a Promise that never resolves on the worktree path:
 // process.exit(child.status) ends the parent before pi proceeds with
@@ -201,59 +202,48 @@ function git(
 	};
 }
 
-// Decide whether a branch's commits are safe to discard: either it has no
-// commits past the base, or every commit is also present on the remote with
-// no divergence. Pure-ish so it can be reused by pi-worktree-gc against
-// dir-less branches by passing a cwd that has an origin remote.
+// Decide whether a branch's commits are safe to discard. A branch is safe
+// only when there are zero commits past the base AND no remote counterpart
+// at origin/<branch>. The remote check is critical: if a remote branch
+// exists it may be the source of an open PR, and deleting the local copy
+// (or worse, the remote) would close the PR on GitHub. Pure-ish so it can
+// be reused by pi-worktree-gc against dir-less branches by passing a cwd
+// that has an origin remote.
 export function checkBranchSafe(
 	agentBranch: string,
 	baseBranch: string,
 	cwd?: string,
 ): { safe: true } | { safe: false; reason: string } {
-	const ahead = git(
-		["rev-list", "--count", `${baseBranch}..${agentBranch}`],
-		cwd,
-	);
-	if (ahead.code !== 0) {
-		return { safe: false, reason: `git rev-list failed: ${ahead.stderr.trim()}` };
-	}
-	const aheadCount = ahead.stdout.trim();
-	if (aheadCount === "0") {
-		return { safe: true };
-	}
-
 	const remoteRef = `refs/remotes/origin/${agentBranch}`;
 	const remoteExists = git(
 		["rev-parse", "--verify", "--quiet", remoteRef],
 		cwd,
 	);
-	if (remoteExists.code !== 0) {
+	if (remoteExists.code === 0) {
 		return {
 			safe: false,
-			reason: `${aheadCount} unpushed commit(s) on ${agentBranch}`,
+			reason: `remote branch origin/${agentBranch} exists (likely PR source)`,
 		};
 	}
 
-	const localOnly = git(
-		["rev-list", "--count", `origin/${agentBranch}..${agentBranch}`],
+	const ahead = git(
+		["rev-list", "--count", `${baseBranch}..${agentBranch}`],
 		cwd,
 	);
-	const remoteOnly = git(
-		["rev-list", "--count", `${agentBranch}..origin/${agentBranch}`],
-		cwd,
-	);
-	const local = localOnly.stdout.trim();
-	const remote = remoteOnly.stdout.trim();
-	if (localOnly.code !== 0 || remoteOnly.code !== 0) {
-		return { safe: false, reason: "could not compare with origin" };
-	}
-	if (local !== "0" || remote !== "0") {
+	if (ahead.code !== 0) {
 		return {
 			safe: false,
-			reason: `not in sync with origin (local +${local}, remote +${remote})`,
+			reason: `git rev-list failed: ${ahead.stderr.trim()}`,
 		};
 	}
-	return { safe: true };
+	const aheadCount = ahead.stdout.trim();
+	if (aheadCount === "0") {
+		return { safe: true };
+	}
+	return {
+		safe: false,
+		reason: `${aheadCount} unpushed commit(s) on ${agentBranch}`,
+	};
 }
 
 export function safeCleanup(
@@ -279,22 +269,6 @@ export function safeCleanup(
 	const safety = checkBranchSafe(agentBranch, baseBranch, worktreeDir);
 	if (!safety.safe) {
 		return { removed: false, reason: safety.reason };
-	}
-
-	// Drop the remote branch first — if the network/push fails we want to
-	// stop before destroying the local copy so the user can retry.
-	const remoteExists = git(
-		["rev-parse", "--verify", "--quiet", `refs/remotes/origin/${agentBranch}`],
-		worktreeDir,
-	);
-	if (remoteExists.code === 0) {
-		const push = git(["push", "origin", "--delete", agentBranch], worktreeDir);
-		if (push.code !== 0) {
-			return {
-				removed: false,
-				reason: `remote branch delete failed: ${push.stderr.trim()}`,
-			};
-		}
 	}
 
 	const rm = git(["worktree", "remove", worktreeDir]);

@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.74.0",
+  "lastChangelogVersion": "0.74.1",
   "defaultProvider": "anthropic",
   "defaultModel": "claude-opus-4-7",
   "packages": [
@@ -14,8 +14,11 @@
     "npm:@juicesharp/rpiv-ask-user-question",
     "npm:pi-goal",
     "npm:pi-web-access",
-    "npm:@sentiolabs/pi-frontend-design"
+    "npm:@sentiolabs/pi-frontend-design",
+    "npm:pi-mermaid",
+    "npm:@artale/pi-design",
+    "npm:pi-ui-ab-test"
   ],
   "defaultThinkingLevel": "xhigh",
-  "hideThinkingBlock": true
+  "hideThinkingBlock": false
 }

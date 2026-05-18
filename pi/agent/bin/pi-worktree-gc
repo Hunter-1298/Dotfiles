@@ -9,11 +9,12 @@
 #
 # Policy (matches auto-worktree.ts safeCleanup):
 #   1. If the worktree still has a directory, working tree must be clean.
-#   2. The agent branch must have either:
-#        - zero commits past its base branch, OR
-#        - every local commit also present on origin/<branch> with no divergence.
-#   3. When safe: delete the remote agent branch (if any), remove the
-#      worktree entry/dir, delete the local branch, drop the piBase config.
+#   2. The agent branch must have zero commits past its base branch AND no
+#      remote counterpart at origin/<branch>. A remote means the branch may
+#      be the source of an open PR — deleting it would close the PR — so we
+#      always leave such branches alone.
+#   3. When safe: remove the worktree entry/dir, delete the local branch,
+#      drop the piBase config. Remote branches are never deleted.
 #
 # Anything that fails a check is reported and left in place.
 
@@ -60,24 +61,18 @@ base_key() { echo "branch.$1.piBase"; }
 # Returns 0 (safe) or non-zero with a stderr reason.
 branch_is_safe() {
   local repo="$1" branch="$2" base="$3"
+  # Refuse to touch any branch that still has a remote counterpart — it may
+  # be the source of an open PR.
+  if git -C "$repo" rev-parse --verify --quiet "refs/remotes/origin/$branch" >/dev/null; then
+    echo "remote branch origin/$branch exists (likely PR source)" >&2
+    return 1
+  fi
   local ahead
   ahead="$(git -C "$repo" rev-list --count "$base..$branch" 2>/dev/null)" || {
     echo "rev-list $base..$branch failed" >&2; return 1; }
   if [[ "$ahead" == "0" ]]; then return 0; fi
-
-  if ! git -C "$repo" rev-parse --verify --quiet "refs/remotes/origin/$branch" >/dev/null; then
-    echo "$ahead unpushed commit(s)" >&2; return 1
-  fi
-  local local_only remote_only
-  local_only="$(git -C "$repo" rev-list --count "origin/$branch..$branch" 2>/dev/null)" || {
-    echo "rev-list origin/$branch..$branch failed" >&2; return 1; }
-  remote_only="$(git -C "$repo" rev-list --count "$branch..origin/$branch" 2>/dev/null)" || {
-    echo "rev-list $branch..origin/$branch failed" >&2; return 1; }
-  if [[ "$local_only" != "0" || "$remote_only" != "0" ]]; then
-    echo "not in sync with origin (local +$local_only, remote +$remote_only)" >&2
-    return 1
-  fi
-  return 0
+  echo "$ahead unpushed commit(s)" >&2
+  return 1
 }
 
 # Working tree dirty?
@@ -89,17 +84,12 @@ worktree_is_dirty() {
   [[ -n "$s" ]]
 }
 
-# Apply the cleanup steps (remote delete -> worktree remove -> branch -D ->
-# config unset). $1 is the main repo to drive git from, $2 the worktree dir
-# (may be empty / missing), $3 the branch.
+# Apply the cleanup steps (worktree remove -> branch -D -> config unset).
+# $1 is the main repo to drive git from, $2 the worktree dir (may be empty
+# / missing), $3 the branch. Remote branches are never deleted; branch_is_safe
+# already refuses anything that still has a remote counterpart.
 do_cleanup() {
   local repo="$1" wt="$2" branch="$3"
-  if git -C "$repo" rev-parse --verify --quiet "refs/remotes/origin/$branch" >/dev/null; then
-    if ! git -C "$repo" push origin --delete "$branch" 2>&1 | sed 's/^/    push: /'; then
-      echo "    ! remote delete failed; aborting"
-      return 1
-    fi
-  fi
   if [[ -n "$wt" && -d "$wt" ]]; then
     if ! git -C "$repo" worktree remove "$wt" 2>&1 | sed 's/^/    wt:   /'; then
       echo "    ! worktree remove failed; aborting"
@@ -192,11 +182,7 @@ process_repo() {
 
     printf "  [%-8s] %s (base %s)\n    SAFE: would delete" "$kind" "$branch" "$base"
     [[ -n "$wt" ]] && printf " worktree %s," "$wt"
-    printf " local branch"
-    if git -C "$repo" rev-parse --verify --quiet "refs/remotes/origin/$branch" >/dev/null; then
-      printf ", remote origin/%s" "$branch"
-    fi
-    printf "\n"
+    printf " local branch\n"
     total_safe=$((total_safe+1))
 
     if [[ $apply -eq 1 ]]; then
