@@ -6,7 +6,6 @@
     "npm:pi-subagents",
     "npm:pi-mcp-adapter",
     "npm:@plannotator/pi-extension",
-    "npm:pi-lens",
     "npm:pi-powerline-footer",
     "npm:@juicesharp/rpiv-todo",
     "npm:pi-btw",
@@ -17,8 +16,10 @@
     "npm:@sentiolabs/pi-frontend-design",
     "npm:pi-mermaid",
     "npm:@artale/pi-design",
-    "npm:pi-ui-ab-test"
+    "npm:pi-ui-ab-test",
+    "npm:context-mode"
   ],
   "defaultThinkingLevel": "xhigh",
   "hideThinkingBlock": false
 }
+
