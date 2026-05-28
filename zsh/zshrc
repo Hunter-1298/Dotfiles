@@ -74,3 +74,22 @@ if [ -f '/home/hshayde/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/hsh
 # -----------------------------
 export PATH=$PATH:/usr/local/bin
 export PATH=$HOME/.npm-global/bin:$PATH
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+# -----------------------------
+# pi worktree shortcut
+# -----------------------------
+# Pi v0.76+ rejects unknown single-dash flags in its strict CLI parser
+# before any extension can intercept, so `pi -w` produces
+# 'Error: Unknown option: -w'. Translate it to the long form
+# (`pi --worktree`), which the auto-worktree extension registers via
+# `pi.registerFlag`. Any other invocation falls through to the real pi.
+pi() {
+  if [[ "$1" == "-w" ]]; then
+    shift
+    command pi --worktree "$@"
+  else
+    command pi "$@"
+  fi
+}

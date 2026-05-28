@@ -1,14 +1,34 @@
 import { spawnSync } from "node:child_process";
-import { existsSync, statSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { basename, dirname, join } from "node:path";
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 
 // auto-worktree
 //
-// When pi launches inside a git repo on a named branch, create a fresh
-// worktree at <repo_parent>/<repo>-<branch>-<ts> on a new branch
-// agent/<branch>-<ts>, then re-exec pi inside it. The parent pi blocks on
-// the child via spawnSync so the user sees a single continuous process.
+// When pi launches with `--worktree` inside a git repo on a named
+// branch, create a fresh worktree at
+// <repo_parent>/<repo>-<branch>-<ts> on a new branch
+// agent/<branch>-<ts>, then re-exec pi inside it (without `--worktree`,
+// so the child doesn't loop). The parent pi blocks on the child via
+// spawnSync so the user sees a single continuous process. Without
+// `--worktree`, the extension is a no-op and pi runs in place.
+//
+// `-w` SHORT FORM: pi v0.76+ rejects unknown single-dash flags in its
+// CLI parser before any extension factory runs, so `pi -w` produces
+// `Error: Unknown option: -w` and never reaches this extension. We pair
+// this extension with a tiny `pi()` zsh function (see Dotfiles
+// zsh/zshrc) that translates `pi -w` -> `pi --worktree` so the short
+// form keeps working for interactive shells. Non-zsh shells / scripts
+// should use `--worktree` directly.
+//
+// Per-project opt-in: a repo can opt into auto-worktree without passing
+// `-w` every time by setting `{ "autoWorktree": true }` in
+// <repo>/.pi/settings.json. We resolve the file relative to the git
+// toplevel so it works from any subdirectory. The CLI flag and the
+// setting are equivalent triggers; the rest of decide() / safeCleanup()
+// behave identically either way. The recursion guard still prevents the
+// re-exec child from looping when the worktree also contains the
+// committed settings file.
 //
 // We also handle the "new tab inside an existing agent worktree" case:
 // terminal emulators (e.g. Ghostty) inherit cwd for new tabs by default,
@@ -22,6 +42,8 @@ import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 // the captured `<base>` if (and only if) it resolves to a real ref.
 //
 // Skip (pi runs normally) when:
+//   - `--worktree` was not passed on the command line and no project
+//     opt-in via .pi/settings.json
 //   - PI_WORKTREE_ALREADY=1 is set (we are the re-exec child)
 //   - not inside a git repo
 //   - HEAD is detached (no named branch)
@@ -45,6 +67,28 @@ import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 
 const RECURSION_GUARD = "PI_WORKTREE_ALREADY";
 const PI_BASE_CONFIG_KEY = "piBase";
+// We still match `-w` here for two reasons: backward compatibility with
+// any caller that bypassed pi's argv parser (e.g. invoking the factory
+// directly from a test), and the recursion-guard child path where
+// we set argv ourselves. The interactive `pi -w` form is handled by
+// the shell-function wrapper that translates -w to --worktree before
+// pi sees it.
+const WORKTREE_FLAGS = new Set(["-w", "--worktree"]);
+
+// Returns the argv with any -w / --worktree occurrences removed, or null
+// if the flag was not present. Exported for tests.
+export function stripWorktreeFlag(argv: readonly string[]): string[] | null {
+	let found = false;
+	const out: string[] = [];
+	for (const a of argv) {
+		if (WORKTREE_FLAGS.has(a)) {
+			found = true;
+			continue;
+		}
+		out.push(a);
+	}
+	return found ? out : null;
+}
 
 function baseConfigKey(agentBranch: string): string {
 	return `branch.${agentBranch}.${PI_BASE_CONFIG_KEY}`;
@@ -295,7 +339,76 @@ export function safeCleanup(
 	return { removed: true };
 }
 
+// Read <git-toplevel>/.pi/settings.json and return true iff it contains
+// `autoWorktree: true`. Any failure (no git, missing file, malformed
+// JSON, wrong type) yields false — the extension stays a no-op. The
+// recursion guard short-circuits so the re-exec child does not re-trigger
+// on the same setting.
+export async function checkProjectOptIn(
+	deps: Pick<DecisionDeps, "env" | "exec"> & {
+		readFile: (path: string) => string;
+	},
+): Promise<boolean> {
+	if (deps.env[RECURSION_GUARD]) return false;
+
+	const top = await deps.exec("git", ["rev-parse", "--show-toplevel"]);
+	if (top.code !== 0 || !top.stdout.trim()) return false;
+
+	const settingsPath = join(top.stdout.trim(), ".pi", "settings.json");
+	let raw: string;
+	try {
+		raw = deps.readFile(settingsPath);
+	} catch {
+		return false;
+	}
+	let parsed: unknown;
+	try {
+		parsed = JSON.parse(raw);
+	} catch {
+		return false;
+	}
+	return (
+		typeof parsed === "object" &&
+		parsed !== null &&
+		(parsed as { autoWorktree?: unknown }).autoWorktree === true
+	);
+}
+
 export default async function (pi: ExtensionAPI) {
+	// Register `--worktree` so pi's argv parser doesn't reject it.
+	// Without this, `pi --worktree` raises 'Unknown option' AFTER all
+	// extension factories run (in applyExtensionFlagValues). The flag
+	// value itself isn't readable until that phase, but we don't need
+	// it — we inspect process.argv directly below, which works because
+	// the factory runs synchronously enough that argv is intact.
+	pi.registerFlag("worktree", {
+		type: "boolean",
+		default: false,
+		description:
+			"Create a fresh agent/<base>-<ts> worktree and re-exec pi inside it",
+	});
+
+	const rawArgs = process.argv.slice(2);
+	let childArgs = stripWorktreeFlag(rawArgs);
+	if (childArgs === null) {
+		// No CLI opt-in. Check whether the project opted in via
+		// .pi/settings.json — if so, behave as if -w had been passed.
+		const projectOptedIn = await checkProjectOptIn({
+			env: process.env,
+			exec: async (cmd, args) => {
+				const r = await pi.exec(cmd, args);
+				return {
+					stdout: r.stdout ?? "",
+					stderr: r.stderr ?? "",
+					code: r.code ?? 1,
+				};
+			},
+			readFile: (p) => readFileSync(p, "utf8"),
+		});
+		if (!projectOptedIn) return;
+		childArgs = rawArgs;
+	}
+
 	const decision = await decide({
 		env: process.env,
 		exec: async (cmd, args) => {
@@ -350,7 +463,7 @@ export default async function (pi: ExtensionAPI) {
 		);
 	}
 
-	const child = spawnSync("pi", process.argv.slice(2), {
+	const child = spawnSync("pi", childArgs, {
 		cwd: worktreeDir,
 		stdio: "inherit",
 		env: { ...process.env, [RECURSION_GUARD]: "1" },
