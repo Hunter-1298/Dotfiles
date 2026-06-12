@@ -15,9 +15,18 @@ import type {
 // pi-tmux-window-name's `/rename` runs as a slash command, outside the agent
 // loop, so none of session_start / before_agent_start / turn_end fire when it
 // completes. Without polling, a re-run `/rename` would not refresh the pane
-// title until the user typed the next prompt. We poll on a slow interval
-// (cheap: in-memory comparison + early return when unchanged; tmux exec only
-// fires when the stored name actually changes) to close that gap.
+// title until the user typed the next prompt. We poll on a slow interval to
+// close that gap, and on each tick re-assert the name only when the live
+// pane_title has drifted from it (one cheap `display-message` read; the
+// `select-pane` write fires only on drift).
+//
+// The drift check is also what repairs the title after pi-tui clears inline
+// images with a Kitty graphics APC sequence (e.g. `ESC _ Ga=d,d=A,q=2 ESC \`,
+// "delete all images"). tmux has no Kitty-graphics support and copies that APC
+// payload straight into pane_title, clobbering our name with raw control data
+// like "Ga=d,d=A,q=2". Comparing against our own last-applied value (instead
+// of the actual title) would miss that external clobber, so the garbage would
+// stick until the next `/rename`.
 
 const WINDOW_NAME_ENTRY_TYPE = "pi-tmux-window-name/window";
 const POLL_INTERVAL_MS = 500;
@@ -47,7 +56,6 @@ export default function paneTitleExtension(pi: ExtensionAPI) {
 	const pane = process.env.TMUX_PANE?.trim();
 	if (!pane) return;
 
-	let lastApplied: string | undefined;
 	let applyInFlight = false;
 	let pollHandle: NodeJS.Timeout | undefined;
 
@@ -55,20 +63,29 @@ export default function paneTitleExtension(pi: ExtensionAPI) {
 		if (applyInFlight) return;
 		const name = getStoredWindowName(ctx.sessionManager.getBranch());
 		if (!name) return;
-		if (name === lastApplied) return;
 
 		applyInFlight = true;
 		try {
-			const result = await pi.exec("tmux", [
-				"select-pane",
-				"-t",
-				pane,
-				"-T",
-				name,
-			]);
-			if (result.code === 0) {
-				lastApplied = name;
+			// Read the live pane title and only re-apply on drift. This both
+			// avoids redundant writes when nothing changed AND repairs the title
+			// after an external clobber (e.g. pi-tui's Kitty graphics APC, which
+			// tmux turns into a pane_title like "Ga=d,d=A,q=2").
+			let current: string | undefined;
+			try {
+				const probe = await pi.exec("tmux", [
+					"display-message",
+					"-p",
+					"-t",
+					pane,
+					"#{pane_title}",
+				]);
+				if (probe.code === 0) current = (probe.stdout ?? "").trim();
+			} catch {
+				// Couldn't read the title; fall through and (re)apply anyway.
 			}
+			if (current === name) return;
+
+			await pi.exec("tmux", ["select-pane", "-t", pane, "-T", name]);
 		} catch {
 			// tmux unavailable mid-session; nothing to do.
 		} finally {
@@ -92,7 +109,6 @@ export default function paneTitleExtension(pi: ExtensionAPI) {
 	};
 
 	pi.on("session_start", async (_event, ctx) => {
-		lastApplied = undefined;
 		await apply(ctx);
 		startPolling(ctx);
 	});

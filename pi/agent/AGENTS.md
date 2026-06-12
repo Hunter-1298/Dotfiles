@@ -14,6 +14,8 @@ These rules bias toward caution over speed. For trivial tasks, use judgment.
 - If you have a specific reason to believe the requested approach will cause problems (bugs, security issues, conflicts with stated rules, well-known anti-patterns), say so once before implementing. State the concern concretely. Do not silently comply, and do not relitigate after the user confirms.
 - If something is unclear, stop, name what is confusing, and ask.
 
+**How to ask:** use the `ask_user_question` tool — do not ask free-form in prose. Batch every clarification you need into one call (up to 4 questions, each with 2-4 options). Each option needs a short label and a description of the trade-off. If you recommend one, put it first and append "(Recommended)". Use `ask_user_question` for the underspecified-request case (interpretations, library/version choice, scope decisions); fall back to prose only for a single open-ended follow-up where options would be artificial.
+
 ## Simplicity first
 
 When two designs are close, pick the one with fewer files, fewer abstractions, and fewer moving parts. Simple is not simplistic — it's understandable, purposeful, and easy to change.
@@ -94,8 +96,8 @@ Touch only what you must. Clean up only your own mess.
 ## Work well with others
 
 - Many agents can operate on the same codebase.
-- **The `auto-worktree` extension already handles worktrees.** When pi starts inside a git repo on a named branch, the extension creates a fresh worktree on a throwaway branch named `agent/<base>-<ts>` (where `<base>` is the branch you launched from) and re-execs pi inside it before the session begins. Do not create another worktree yourself.
-- **At the start of every session, ask up front which branch to submit the PR into.** Default suggestion: the base branch encoded in the current branch name (`agent/<base>-<ts>` → `<base>`). Confirm before you start making commits.
+- **The `auto-worktree` extension handles worktrees, but only when pi is launched with `-w` / `--worktree`.** When that flag is passed inside a git repo on a named branch, the extension creates a fresh worktree on a throwaway branch named `agent/<base>-<ts>` (where `<base>` is the branch you launched from) and re-execs pi inside it before the session begins. Without `-w`, pi runs in place and no worktree is created. Do not create another worktree yourself.
+- **At the start of every session, check whether you're in an agent worktree** (linked worktree at the toplevel, current branch matches `agent/*`). If yes, ask up front which branch to submit the PR into — default suggestion: the base branch encoded in the current branch name (`agent/<base>-<ts>` → `<base>`), confirm before you start making commits. If no, you're working in place: skip the PR flow entirely and just edit files normally.
 - If `git rev-parse --show-toplevel` fails, or `.git` at the toplevel is a regular file (already in a linked worktree) but the branch is not `agent/*`, or HEAD is detached, you are not in an extension-managed worktree. In that case do the work in place and skip the PR step — do not invent a branch.
 - When the task is done and there are commits on the agent branch, open a PR from the agent branch into the target the user named. Never push directly to that target.
 - **Stay inside your own auto-worktree.** Other live `pi` sessions own their own `agent/<base>-<ts>` worktrees. Never `cd` into another `agent/...-<timestamp>` worktree to run git operations — that fights the other session for branch state and uncommitted edits silently disappear. To bring a remote PR branch in, run `git fetch origin <branch>` then `git checkout -b <local> FETCH_HEAD` inside your own worktree, or create a dedicated worktree with `git worktree add <path> -b <new-branch> origin/<base>`. If `gh pr checkout` lands you in another worktree, undo it and re-fetch into your own.

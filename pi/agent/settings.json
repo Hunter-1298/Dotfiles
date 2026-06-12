@@ -1,7 +1,7 @@
 {
-  "lastChangelogVersion": "0.74.1",
+  "lastChangelogVersion": "0.79.1",
   "defaultProvider": "anthropic",
-  "defaultModel": "claude-opus-4-7",
+  "defaultModel": "claude-opus-4-8",
   "packages": [
     "npm:pi-subagents",
     "npm:pi-mcp-adapter",
@@ -20,6 +20,6 @@
     "npm:context-mode"
   ],
   "defaultThinkingLevel": "xhigh",
-  "hideThinkingBlock": false
+  "hideThinkingBlock": false,
+  "theme": "dark"
 }
-
