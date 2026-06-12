@@ -75,7 +75,16 @@ if [ -f '/home/hshayde/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/hsh
 export PATH=$PATH:/usr/local/bin
 export PATH=$HOME/.npm-global/bin:$PATH
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+# nvm refuses to coexist with a custom npm `prefix` (~/.npm-global) and prints a
+# warning on every shell start. Load nvm WITHOUT auto-activating, neutralize its
+# prefix check, then activate the default node silently. This keeps ~/.npm-global
+# as the global prefix and produces zero console output, so Powerlevel10k's
+# instant-prompt warning stays gone too.
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  \. "$NVM_DIR/nvm.sh" --no-use
+  nvm_die_on_prefix() { :; }
+  nvm use default --silent >/dev/null 2>&1
+fi
 
 # -----------------------------
 # pi worktree shortcut
