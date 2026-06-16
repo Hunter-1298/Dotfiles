@@ -5,30 +5,33 @@ import type {
 } from "@mariozechner/pi-coding-agent";
 
 // Companion to pi-tmux-window-name.
-// Reads the window name that plugin persists and mirrors it to this pane's
-// pane_title via `tmux select-pane -T`. Does not generate names itself, so
-// no duplicate LLM calls.
+// Reads the window name that plugin persists and mirrors it onto a per-pane
+// tmux *user option* (`@pi_pane_label`) via `tmux set-option -p`. Does not
+// generate names itself, so no duplicate LLM calls.
+//
+// Why a user option instead of the built-in pane_title (`select-pane -T`):
+// pi-tui clears inline images with a Kitty graphics APC sequence (e.g.
+// `ESC _ Ga=d,d=A,q=2 ESC \`, "delete all images"). tmux has no Kitty-graphics
+// support, so its APC handler copies that payload straight into pane_title,
+// clobbering our name with raw control data like "Ga=d,d=A,q=2". When the
+// pane border shows `#{pane_title}`, the name visibly flips between the task
+// name and that garbage on every image clear. A `@`-prefixed user option lives
+// in a separate namespace the Kitty APC can't reach, so the label never gets
+// clobbered and the border (and pi-monitor) read a stable value.
 //
 // Display requires `set -g pane-border-status top` and a pane-border-format
-// that includes `#{pane_title}` in tmux.conf.
+// that reads `#{@pi_pane_label}` (with a `#{pane_title}` fallback for plain
+// shells) in tmux.conf.
 //
 // pi-tmux-window-name's `/rename` runs as a slash command, outside the agent
 // loop, so none of session_start / before_agent_start / turn_end fire when it
-// completes. Without polling, a re-run `/rename` would not refresh the pane
-// title until the user typed the next prompt. We poll on a slow interval to
-// close that gap, and on each tick re-assert the name only when the live
-// pane_title has drifted from it (one cheap `display-message` read; the
-// `select-pane` write fires only on drift).
-//
-// The drift check is also what repairs the title after pi-tui clears inline
-// images with a Kitty graphics APC sequence (e.g. `ESC _ Ga=d,d=A,q=2 ESC \`,
-// "delete all images"). tmux has no Kitty-graphics support and copies that APC
-// payload straight into pane_title, clobbering our name with raw control data
-// like "Ga=d,d=A,q=2". Comparing against our own last-applied value (instead
-// of the actual title) would miss that external clobber, so the garbage would
-// stick until the next `/rename`.
+// completes. We poll on a slow interval to pick up a re-run `/rename` without
+// waiting for the next prompt. The poll compares against our own last-applied
+// value in memory and writes only on change, so it's a cheap no-op tick when
+// nothing changed (no tmux call at all unless the stored name actually moved).
 
 const WINDOW_NAME_ENTRY_TYPE = "pi-tmux-window-name/window";
+const PANE_LABEL_OPTION = "@pi_pane_label";
 const POLL_INTERVAL_MS = 500;
 
 function getStoredWindowName(entries: SessionEntry[]): string | undefined {
@@ -56,40 +59,29 @@ export default function paneTitleExtension(pi: ExtensionAPI) {
 	const pane = process.env.TMUX_PANE?.trim();
 	if (!pane) return;
 
-	let applyInFlight = false;
+	// Last value we wrote to @pi_pane_label for this pane. We are the only
+	// writer of this option, so an in-memory copy is authoritative and lets
+	// the poll skip the tmux round-trip when nothing changed.
+	let lastApplied: string | undefined;
+
 	let pollHandle: NodeJS.Timeout | undefined;
 
 	const apply = async (ctx: ExtensionContext) => {
-		if (applyInFlight) return;
 		const name = getStoredWindowName(ctx.sessionManager.getBranch());
-		if (!name) return;
+		if (!name || name === lastApplied) return;
 
-		applyInFlight = true;
 		try {
-			// Read the live pane title and only re-apply on drift. This both
-			// avoids redundant writes when nothing changed AND repairs the title
-			// after an external clobber (e.g. pi-tui's Kitty graphics APC, which
-			// tmux turns into a pane_title like "Ga=d,d=A,q=2").
-			let current: string | undefined;
-			try {
-				const probe = await pi.exec("tmux", [
-					"display-message",
-					"-p",
-					"-t",
-					pane,
-					"#{pane_title}",
-				]);
-				if (probe.code === 0) current = (probe.stdout ?? "").trim();
-			} catch {
-				// Couldn't read the title; fall through and (re)apply anyway.
-			}
-			if (current === name) return;
-
-			await pi.exec("tmux", ["select-pane", "-t", pane, "-T", name]);
+			await pi.exec("tmux", [
+				"set-option",
+				"-p",
+				"-t",
+				pane,
+				PANE_LABEL_OPTION,
+				name,
+			]);
+			lastApplied = name;
 		} catch {
 			// tmux unavailable mid-session; nothing to do.
-		} finally {
-			applyInFlight = false;
 		}
 	};
 
@@ -123,5 +115,19 @@ export default function paneTitleExtension(pi: ExtensionAPI) {
 
 	pi.on("session_shutdown", async () => {
 		stopPolling();
+		// Clear our label so the now-plain shell pane falls back to its own
+		// pane_title in the border instead of showing a stale task name.
+		try {
+			await pi.exec("tmux", [
+				"set-option",
+				"-p",
+				"-u",
+				"-t",
+				pane,
+				PANE_LABEL_OPTION,
+			]);
+		} catch {
+			// tmux already gone; nothing to clean up.
+		}
 	});
 }
