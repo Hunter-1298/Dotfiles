@@ -34,6 +34,38 @@ const WINDOW_NAME_ENTRY_TYPE = "pi-tmux-window-name/window";
 const PANE_LABEL_OPTION = "@pi_pane_label";
 const POLL_INTERVAL_MS = 500;
 
+// Window names we never surface as an agent label — the plain
+// shell / runtime defaults a pane carries before (or instead of) the
+// window-name plugin renaming it. Mirroring "zsh"/"pi" into the label
+// would be worse than letting pi-monitor show its "pane N" fallback.
+const DEFAULT_WINDOW_NAME_RE = /^(?:-?(?:ba|z|fi|da|k|tc)?sh|fish|node|pi|tmux|login)$/i;
+
+// Read the live tmux window name for this pane. Unlike pane_title,
+// window_name is NOT clobbered by pi-tui's Kitty graphics APC, so it's
+// a safe source — and it's exactly what the user sees in the window
+// border. Returns undefined for shell/runtime defaults so we don't
+// label a pane "zsh".
+async function getCurrentWindowName(
+	pi: ExtensionAPI,
+	pane: string,
+): Promise<string | undefined> {
+	try {
+		const result = await pi.exec("tmux", [
+			"display-message",
+			"-p",
+			"-t",
+			pane,
+			"#{window_name}",
+		]);
+		if (result.code !== 0) return undefined;
+		const name = result.stdout?.trim();
+		if (!name || DEFAULT_WINDOW_NAME_RE.test(name)) return undefined;
+		return name;
+	} catch {
+		return undefined;
+	}
+}
+
 function getStoredWindowName(entries: SessionEntry[]): string | undefined {
 	for (let i = entries.length - 1; i >= 0; i -= 1) {
 		const entry = entries[i];
@@ -67,7 +99,15 @@ export default function paneTitleExtension(pi: ExtensionAPI) {
 	let pollHandle: NodeJS.Timeout | undefined;
 
 	const apply = async (ctx: ExtensionContext) => {
-		const name = getStoredWindowName(ctx.sessionManager.getBranch());
+		// Prefer the window-name entry the companion plugin writes for
+		// freshly-named sessions (short "<feature>: <description>" form,
+		// in-memory so the poll stays cheap). Resumed sessions restore +
+		// rename the tmux window but DON'T re-append that entry, so fall
+		// back to the live tmux window name. Without this, pi-monitor shows
+		// the numeric "pane N" fallback for every resumed agent.
+		const name =
+			getStoredWindowName(ctx.sessionManager.getBranch()) ??
+			(await getCurrentWindowName(pi, pane));
 		if (!name || name === lastApplied) return;
 
 		try {
