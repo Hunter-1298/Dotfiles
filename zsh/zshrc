@@ -1,23 +1,47 @@
 # -----------------------------
-# Powerlevel10k instant prompt
+# Minimal stable zshrc for WSL
+# No Powerlevel10k. No instant prompt. No p10k cache.
 # -----------------------------
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
 
-# -----------------------------
-# Environment variables
-# -----------------------------
-export HELIX_RUNTIME=~/helix/src/helix/runtime
-export PATH="$HOME/.pi/agent/bin:$PATH"
-export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
-export PATH=$PATH:/opt/zig
-export ZED_ALLOW_EMULATED_GPU=1
-export ZSH="$HOME/.oh-my-zsh"
-export ZSH_CUSTOM="$ZSH/custom"
+# Safe cache/temp locations.
+export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_CONFIG_HOME="$HOME/.config"
+export ZSH_CACHE_DIR="$XDG_CACHE_HOME/zsh"
+export TMPDIR="$XDG_CACHE_HOME/tmp"
+export TMP="$TMPDIR"
+export TEMP="$TMPDIR"
+
+mkdir -p "$ZSH_CACHE_DIR" "$TMPDIR" 2>/dev/null || true
+chmod 700 "$XDG_CACHE_HOME" "$ZSH_CACHE_DIR" "$TMPDIR" 2>/dev/null || true
+
+# zsh history.
+HISTSIZE=1000
+SAVEHIST=2000
+HISTFILE="$HOME/.zsh_history"
+
+# Basic editor settings.
 export EDITOR=nvim
 export VISUAL=nvim
+
+# Project/env paths.
+export HELIX_RUNTIME="$HOME/helix/src/helix/runtime"
+export ZED_ALLOW_EMULATED_GPU=1
+export PATH="$HOME/.pi/agent/bin:$PATH"
+export PATH="$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
+export PATH="$PATH:/opt/zig"
+export PATH="$HOME/.npm-global/bin:$PATH"
+
+# Oh My Zsh, but with no theme override.
+export ZSH="$HOME/.oh-my-zsh"
+export ZSH_CUSTOM="$ZSH/custom"
+ZSH_THEME=""
+
+# Keep plugins minimal and safe.
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting virtualenv)
+
+if [[ -s "$ZSH/oh-my-zsh.sh" ]]; then
+  source "$ZSH/oh-my-zsh.sh"
+fi
 
 # -----------------------------
 # Aliases
@@ -25,75 +49,61 @@ export VISUAL=nvim
 alias zed="WAYLAND_DISPLAY='' zed"
 alias code='cursor'
 alias z='zellij'
-alias vim=nvim
-alias ls='eza --icons --color=always --show-symlinks'
-alias lart='eza -als=time --icons --color=always --show-symlinks'
-alias la='eza -al --icons --color=always --show-symlinks'
+alias vim='nvim'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias python3='python'
-alias vim='nvim'
+
+if command -v eza >/dev/null 2>&1; then
+  alias ls='eza --icons --color=always --show-symlinks'
+  alias la='eza -al --icons --color=always --show-symlinks'
+  alias lart='eza -als=time --icons --color=always --show-symlinks'
+else
+  alias ls='ls --color=auto'
+  alias la='ls -la --color=auto'
+fi
 
 # -----------------------------
-# History settings
-# -----------------------------
-HISTSIZE=1000
-HISTFILESIZE=2000
-
-# -----------------------------
-# Theme and plugins
-# -----------------------------
-ZSH_THEME="powerlevel10k/powerlevel10k"
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting virtualenv)
-
-# -----------------------------
-# Source Oh My Zsh
-# -----------------------------
-source $ZSH/oh-my-zsh.sh
-# Load Powerlevel10k configuration
-# Powerlevel10k configuration
-[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
-
-# -----------------------------
-# Optional: cd auto-ls
+# cd auto-ls
+# Uses eza directly so icons/colors work inside the function.
 # -----------------------------
 cd() {
-    builtin cd "$@" && ls
+  builtin cd "$@" || return
+
+  if command -v eza >/dev/null 2>&1; then
+    eza --icons --color=always --show-symlinks
+  else
+    ls --color=auto
+  fi
 }
-[[ -f ~/.env ]] && source ~/.env
+
+# -----------------------------
+# Local env
+# -----------------------------
+[[ -f "$HOME/.env" ]] && source "$HOME/.env"
 
 # -----------------------------
 # Google Cloud SDK
 # -----------------------------
-if [ -f '/home/hshayde/google-cloud-sdk/path.zsh.inc' ]; then . '/home/hshayde/google-cloud-sdk/path.zsh.inc'; fi
-if [ -f '/home/hshayde/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/hshayde/google-cloud-sdk/completion.zsh.inc'; fi
+[[ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]] && source "$HOME/google-cloud-sdk/path.zsh.inc"
+[[ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]] && source "$HOME/google-cloud-sdk/completion.zsh.inc"
 
 # -----------------------------
-# Extra PATH (npm-global, etc.)
+# nvm
 # -----------------------------
-export PATH=$PATH:/usr/local/bin
-export PATH=$HOME/.npm-global/bin:$PATH
 export NVM_DIR="$HOME/.nvm"
-# nvm refuses to coexist with a custom npm `prefix` (~/.npm-global) and prints a
-# warning on every shell start. Load nvm WITHOUT auto-activating, neutralize its
-# prefix check, then activate the default node silently. This keeps ~/.npm-global
-# as the global prefix and produces zero console output, so Powerlevel10k's
-# instant-prompt warning stays gone too.
-if [ -s "$NVM_DIR/nvm.sh" ]; then
-  \. "$NVM_DIR/nvm.sh" --no-use
+
+if [[ -s "$NVM_DIR/nvm.sh" ]]; then
+  source "$NVM_DIR/nvm.sh" --no-use
   nvm_die_on_prefix() { :; }
   nvm use default --silent >/dev/null 2>&1
 fi
 
 # -----------------------------
 # pi worktree shortcut
+# Avoid recursion and give a useful error if pi is missing.
 # -----------------------------
-# Pi v0.76+ rejects unknown single-dash flags in its strict CLI parser
-# before any extension can intercept, so `pi -w` produces
-# 'Error: Unknown option: -w'. Translate it to the long form
-# (`pi --worktree`), which the auto-worktree extension registers via
-# `pi.registerFlag`. Any other invocation falls through to the real pi.
 pi() {
   if [[ "$1" == "-w" ]]; then
     shift
@@ -102,3 +112,134 @@ pi() {
     command pi "$@"
   fi
 }
+
+# -----------------------------
+# Custom micro1 prompt
+# Safe replacement for Powerlevel10k
+# No p10k, no instant prompt, no gitstatus daemon.
+# -----------------------------
+
+autoload -Uz colors && colors
+autoload -Uz vcs_info
+autoload -Uz add-zsh-hook
+
+# Git branch via built-in zsh vcs_info.
+zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:git:*' check-for-changes true
+zstyle ':vcs_info:git:*' unstagedstr '!'
+zstyle ':vcs_info:git:*' stagedstr '+'
+zstyle ':vcs_info:git:*' formats ' %F{magenta}git:%b%f%F{yellow}%u%c%f'
+zstyle ':vcs_info:git:*' actionformats ' %F{magenta}git:%b|%a%f%F{yellow}%u%c%f'
+
+# Enable prompt substitution so ${vcs_info_msg_0_} updates dynamically.
+setopt PROMPT_SUBST
+
+# Show command duration if the last command took more than 2 seconds.
+zmodload zsh/datetime 2>/dev/null || true
+typeset -g __cmd_start=0
+typeset -g __cmd_duration=''
+
+preexec() {
+  __cmd_start=$EPOCHSECONDS
+}
+
+precmd() {
+  local exit_code=$?
+
+  vcs_info
+
+  __cmd_duration=''
+  if [[ $__cmd_start -gt 0 ]]; then
+    local elapsed=$(( EPOCHSECONDS - __cmd_start ))
+    if [[ $elapsed -ge 2 ]]; then
+      __cmd_duration=" %F{cyan}${elapsed}s%f"
+    fi
+  fi
+
+  if [[ $exit_code -eq 0 ]]; then
+    RPROMPT="%F{green}ok%f${__cmd_duration}"
+  else
+    RPROMPT="%F{red}exit ${exit_code}%f${__cmd_duration}"
+  fi
+}
+
+# Two-line prompt:
+# top: user@host path git-branch
+# bottom: arrow
+PROMPT='%F{cyan}%n%f%F{white}@%f%F{blue}%m%f %F{green}%~%f${vcs_info_msg_0_}
+%F{yellow}>%f '
+
+# Optional: terminal title.
+precmd_title() {
+  print -Pn "\e]0;%n@%m: %~\a"
+}
+
+case "$TERM" in
+  xterm*|rxvt*|alacritty*|kitty*)
+    add-zsh-hook precmd precmd_title
+    ;;
+esac
+
+# -----------------------------
+# Custom micro1 prompt
+# Safe replacement for Powerlevel10k
+# No p10k, no instant prompt, no gitstatus daemon.
+# -----------------------------
+
+autoload -Uz colors && colors
+autoload -Uz vcs_info
+
+# Git branch via built-in zsh vcs_info.
+zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:git:*' check-for-changes true
+zstyle ':vcs_info:git:*' unstagedstr '!'
+zstyle ':vcs_info:git:*' stagedstr '+'
+zstyle ':vcs_info:git:*' formats ' %F{magenta}� %b%f%F{yellow}%u%c%f'
+zstyle ':vcs_info:git:*' actionformats ' %F{magenta}� %b|%a%f%F{yellow}%u%c%f'
+
+# Enable prompt substitution so ${vcs_info_msg_0_} updates dynamically.
+setopt PROMPT_SUBST
+
+# Show command duration if the last command took more than 2 seconds.
+zmodload zsh/datetime 2>/dev/null || true
+typeset -g __cmd_start=0
+typeset -g __cmd_duration=''
+
+preexec() {
+  __cmd_start=$EPOCHSECONDS
+}
+
+precmd() {
+  local exit_code=$?
+
+  vcs_info
+
+  __cmd_duration=''
+  if [[ $__cmd_start -gt 0 ]]; then
+    local elapsed=$(( EPOCHSECONDS - __cmd_start ))
+    if [[ $elapsed -ge 2 ]]; then
+      __cmd_duration=" %F{cyan}${elapsed}s%f"
+    fi
+  fi
+
+  if [[ $exit_code -eq 0 ]]; then
+    RPROMPT="%F{green}ok%f${__cmd_duration}"
+  else
+    RPROMPT="%F{red}exit ${exit_code}%f${__cmd_duration}"
+  fi
+}
+
+# Two-line prompt:
+# top: user@host path git-branch
+# bottom: nice prompt arrow
+PROMPT='%F{cyan}%n%f%F{white}@%f%F{blue}%m%f %F{green}%~%f${vcs_info_msg_0_}
+%F{yellow}❯%f '
+
+# Optional: terminal title.
+case "$TERM" in
+  xterm*|rxvt*|alacritty*|kitty*)
+    precmd_title() { print -Pn "\e]0;%n@%m: %~\a" }
+    autoload -Uz add-zsh-hook
+    add-zsh-hook precmd precmd_title
+    ;;
+esac
