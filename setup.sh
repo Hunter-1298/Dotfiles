@@ -81,26 +81,6 @@ install_tool() {
 	esac
 }
 
-install_eza_linux() {
-	# eza is in default Ubuntu repos starting from 24.04; older distros need a
-	# tarball drop-in. Try apt first, fall back to a static binary in ~/.local/bin.
-	if command -v eza >/dev/null 2>&1; then return 0; fi
-	apt_update_once
-	if sudo apt-get install -y -qq eza 2>/dev/null; then return 0; fi
-	warn "apt repo lacks eza; downloading static binary to ~/.local/bin"
-	mkdir -p "$HOME/.local/bin"
-	local tmp; tmp=$(mktemp -d)
-	if curl -fsSL "https://github.com/eza-community/eza/releases/latest/download/eza_x86_64-unknown-linux-gnu.tar.gz" \
-			| tar xz -C "$tmp"; then
-		mv "$tmp/eza" "$HOME/.local/bin/eza"
-		chmod +x "$HOME/.local/bin/eza"
-		ok "installed eza to ~/.local/bin/eza"
-	else
-		warn "eza download failed — install manually"
-	fi
-	rm -rf "$tmp"
-}
-
 if [ "${SKIP_INSTALLS:-0}" != "1" ]; then
 	if [ "$OS" = macos ]; then ensure_brew; fi
 
@@ -114,10 +94,6 @@ if [ "${SKIP_INSTALLS:-0}" != "1" ]; then
 	install_tool fzf      fzf      fzf
 	install_tool jq       jq       jq
 	install_tool gh       gh       gh
-
-	if [ "$OS" = linux ]; then install_eza_linux
-	else install_tool eza eza eza
-	fi
 else
 	log "SKIP_INSTALLS=1 — skipping CLI installs"
 fi

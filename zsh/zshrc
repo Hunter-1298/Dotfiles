@@ -55,26 +55,24 @@ alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias python3='python'
 
-if command -v eza >/dev/null 2>&1; then
-  alias ls='eza --icons --color=always --show-symlinks'
-  alias la='eza -al --icons --color=always --show-symlinks'
-  alias lart='eza -als=time --icons --color=always --show-symlinks'
-else
-  alias ls='ls --color=auto'
-  alias la='ls -la --color=auto'
-fi
+alias ls='ls --color=auto'
+alias la='ls -la --color=auto'
+alias lart='ls -lart --color=auto'
 
 # -----------------------------
 # cd auto-ls
-# Uses eza directly so icons/colors work inside the function.
+#
+# Guarded to real interactive terminals only ([[ -o interactive ]] && [[ -t 1 ]]).
+# Non-interactive shells (scripts, CI, agent Bash-tool subshells) skip this
+# entirely, so cd never injects listing output into captured command output.
+# Keep that guard even though plain ls is well behaved - it is what stops a
+# cd side effect from corrupting anything that parses a command's stdout.
 # -----------------------------
 cd() {
   builtin cd "$@" || return
 
-  if command -v eza >/dev/null 2>&1; then
-    eza --icons --color=always --show-symlinks
-  else
-    ls --color=auto
+  if [[ -o interactive ]] && [[ -t 1 ]]; then
+    command ls --color=auto
   fi
 }
 
