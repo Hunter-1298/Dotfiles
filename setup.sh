@@ -212,6 +212,8 @@ ln -sfn "$HOME/.config/pi" "$HOME/.pi"
 # pi/agent/.gitignore. Discovered dynamically from git so new tracked dirs
 # (e.g. `types/`, future additions) are picked up without editing this script.
 mkdir -p "$HOME/.config/pi/agent"
+bash "$DOTFILES_DIR/.devin/install-agent-rules.sh"
+
 mapfile -t PI_TRACKED < <(
 	cd "$DOTFILES_DIR" && \
 		git ls-tree --name-only HEAD pi/agent/ \
