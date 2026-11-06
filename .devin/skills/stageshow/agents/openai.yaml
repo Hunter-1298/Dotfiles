@@ -1,0 +1,5 @@
+interface:
+  display_name: "Stageshow"
+  short_description: "Faux product UI and cursor demos"
+policy:
+  allow_implicit_invocation: false

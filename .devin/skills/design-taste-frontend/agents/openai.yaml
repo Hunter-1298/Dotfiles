@@ -1,0 +1,5 @@
+interface:
+  display_name: "Design Taste Frontend"
+  short_description: "Anti-slop design direction for new screens"
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,5 @@
+interface:
+  display_name: "Awesome DESIGN.md"
+  short_description: "Apply a real product's design system"
+policy:
+  allow_implicit_invocation: false

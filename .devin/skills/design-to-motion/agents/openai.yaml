@@ -1,0 +1,5 @@
+interface:
+  display_name: "Design to Motion"
+  short_description: "Animate a static design into a showcase loop"
+policy:
+  allow_implicit_invocation: false

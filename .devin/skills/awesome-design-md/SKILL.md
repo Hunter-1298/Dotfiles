@@ -1,5 +1,6 @@
 ---
 name: awesome-design-md
+disable-model-invocation: true
 description: Choose and apply a coherent UI design reference from VoltAgent's Awesome DESIGN.md collection when generating, redesigning, or reviewing websites and interfaces. Preserve the project's approved design system and load only relevant references.
 ---
 
