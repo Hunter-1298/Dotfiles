@@ -15,6 +15,7 @@ Living document of the configs I run for my workflow.
 | `ghostty/`     | Ghostty terminal config                                              |
 | `zellij/`      | Zellij multiplexer + layouts                                         |
 | `zed/`         | Zed editor settings                                                  |
+| `orca/`        | Orca keybindings (tmux-style Cmd+H/J/K/L navigation)                 |
 | `wandb/`       | Weights & Biases                                                     |
 | `configstore/` | npm/configstore data                                                 |
 | `nvm/`         | Node version manager                                                 |

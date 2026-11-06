@@ -198,6 +198,9 @@ else
 	backup_and_link "$DOTFILES_DIR/zed" "$HOME/.config/zed"
 fi
 
+# Orca: tmux-style keybindings.
+backup_and_link "$DOTFILES_DIR/orca/keybindings.json" "$HOME/.orca/keybindings.json"
+
 # -----------------------------------------------------------------------------
 # pi coding agent: link tracked config + install packages
 # -----------------------------------------------------------------------------
