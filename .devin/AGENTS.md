@@ -26,7 +26,8 @@ NEVER write unit tests after you write code.
 - A skill I invoke sets the scope and checks for its work; skills you pick up on your own work within build-first scope.
 - When a skill's steps call for a subagent, dispatch it with a fresh context window.
 - When a skill or tool named in these instructions isn't available here, say so and continue with what is.
-- When you need decisions from me, use the harness's structured question tool with 2-4 options and your recommendation marked, if it has one.
+- When you need decisions from me, including grilling rounds, use the harness's structured question tool with 2-4 options and your recommendation marked, if it has one.
+- Before a large update (new features, multi-file changes, architecture or data-model changes, new dependencies, workflow or config overhauls), invoke the `grilling` skill in light mode: one round, a single question-tool call of at most 4 questions on the decisions that would most change the design. Then state your remaining assumptions and build, asking a follow-up only if an answer raises a major new decision. Small fixes and single-file edits skip this.
 
 ## Agent skills
 
