@@ -2,20 +2,19 @@
 
 Build-first: ship the requested outcome with the smallest coherent change, keeping investigation, planning and verification proportional to the task.
 
-- Keep progress updates brief and hand off with a few bullets.
+- Keep everything short, concise and idiomatic: updates, hand-offs (a few bullets), comments, docs, commit messages and code.
 - Change only what the request needs. Keep existing security controls intact and fix any security defect your change introduces; audits and hardening happen when I ask.
 - Decide routine matters yourself. Ask only about consequential ambiguity or scope changes, and offer extras as suggestions.
 - Choose what best serves user, developer and agent experience together (UX, DX, AX).
+- Build the simplest architecture that works today and is easy to extend: deep modules behind small interfaces at clean seams, nothing speculative.
 - Verify the behavior you changed and run the project's required checks. Save broad regression suites and coverage drives for explicit testing requests or release work; CI and release gates always apply.
 - Fix regressions your change caused, mention unrelated failures in a line, and report exactly which checks ran and which didn't.
 - Stop once the requested behavior works and proportional checks pass. Deploying, publishing, destructive actions and bypassing required approvals each need my explicit go-ahead.
 
 # Testing
 
-NEVER write unit tests after you write code.
-
-- Highly prefer E2E tests as the sole testing mechanism. Use them to verify complex features work. At the end of E2E tests, produce a verifiable and repeatable artifact.
-- If you must test a system in isolation, FIRST write all the ways it could fail, THEN write the code.
+- Write no unit tests. After building a feature, verify it with E2E tests that exercise the real feature and end in a verifiable, repeatable artifact.
+- These rules override testing steps in skills, including `tdd` when another skill runs it. Only `/tdd` invoked directly by me runs its own test loop.
 
 # Frontend
 
