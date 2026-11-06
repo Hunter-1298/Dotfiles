@@ -20,7 +20,7 @@ Build-first: ship the requested outcome with the smallest coherent change, keepi
 
 # Frontend
 
-- Avoid unnecessary secondary labels and descriptions. Let the layout do the explaining.
+- Goal: custom, alive landing pages and clean components with amazing UI and functionality. Less is more: no secondary text; let the UI and layout speak for themselves.
 
 # Skills and agents
 
