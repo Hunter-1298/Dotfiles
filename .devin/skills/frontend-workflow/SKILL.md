@@ -16,7 +16,7 @@ Mobbin supplies ideas and direction; `design-taste-frontend` and `frontend-desig
    - **Motion**: invoke `design-to-motion` to animate a supplied design, Figma frame, screenshot or mockup into a showcase loop or MP4/GIF export, and for other landing-page visuals and logo rows. Product-UI scenes come from `stageshow`; in-product interactions (hovers, menus, toasts) use normal implementation patterns.
 4. Adapt every pattern to this app's users, workflows, brand, tokens and components. The project's own tokens and components win over any skill's defaults.
 5. Pick a coherent direction, state it in a sentence, and build it: functional, accessible and responsive, with the states it needs.
-6. Cut taglines, helper text and secondary labels from product UI; when a screen needs them to make sense, fix the layout instead. On landing pages, `landing-page-design`'s page structure (including its benefit-statement section) governs.
+6. Avoid unnecessary secondary labels and descriptions. Let the layout do the explaining. On landing pages, `landing-page-design`'s page structure (including its benefit-statement section) governs.
 7. Check the result against `web-design-guidelines`, run the project's checks, inspect mobile and desktop when tooling allows, then iterate with the user on the working result.
 
 When delegating UI work to another agent, pass along this skill and the references you chose.

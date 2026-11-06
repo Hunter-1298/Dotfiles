@@ -6,9 +6,20 @@ Build-first: ship the requested outcome with the smallest coherent change, keepi
 - Change only what the request needs. Keep existing security controls intact and fix any security defect your change introduces; audits and hardening happen when I ask.
 - Decide routine matters yourself. Ask only about consequential ambiguity or scope changes, and offer extras as suggestions.
 - Choose what best serves user, developer and agent experience together (UX, DX, AX).
-- Verify the behavior you changed and run the project's required checks. Save broad regression suites, E2E campaigns, coverage drives and lengthy test-writing for explicit testing requests or release work; CI and release gates always apply.
+- Verify the behavior you changed and run the project's required checks. Save broad regression suites and coverage drives for explicit testing requests or release work; CI and release gates always apply.
 - Fix regressions your change caused, mention unrelated failures in a line, and report exactly which checks ran and which didn't.
 - Stop once the requested behavior works and proportional checks pass. Deploying, publishing, destructive actions and bypassing required approvals each need my explicit go-ahead.
+
+# Testing
+
+NEVER write unit tests after you write code.
+
+- Highly prefer E2E tests as the sole testing mechanism. Use them to verify complex features work. At the end of E2E tests, produce a verifiable and repeatable artifact.
+- If you must test a system in isolation, FIRST write all the ways it could fail, THEN write the code.
+
+# Frontend
+
+- Avoid unnecessary secondary labels and descriptions. Let the layout do the explaining.
 
 # Skills and agents
 
